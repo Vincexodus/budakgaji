@@ -70,6 +70,7 @@
     "react-day-picker": "^8.9.1",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-google-charts": "^5.2.1",
     "react-hook-form": "^7.47.0",
     "react-responsive": "^10.0.0",
     "recharts": "^2.12.7",
