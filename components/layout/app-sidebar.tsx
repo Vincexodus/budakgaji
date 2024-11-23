@@ -30,6 +30,7 @@ import {
   SidebarRail
 } from '@/components/ui/sidebar';
 import { navItems } from '@/constants/data';
+import { bankNavItems } from '@/constants/data';
 import {
   BadgeCheck,
   Bell,
@@ -39,22 +40,29 @@ import {
   GalleryVerticalEnd,
   LogOut
 } from 'lucide-react';
+import paynet from '../../public/icons/paynet.svg';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 
-export const company = {
-  name: 'Acme Inc',
-  logo: GalleryVerticalEnd,
-  plan: 'Enterprise'
-};
 
 export default function AppSidebar() {
   const { data: session } = useSession();
   const pathname = usePathname();
 
+  // Set the isPaynet flag based on the directory
+  const isPaynet = pathname.startsWith('/dashboard');
+
+  // Conditionally set the company name and nav items
+  const company = {
+    name: isPaynet ? 'PayNet' : 'Bank ABC',
+    logo: GalleryVerticalEnd,
+    plan: 'Enterprise'
+  };
+
+  const items = isPaynet ? navItems : bankNavItems;
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -72,7 +80,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarMenu>
-            {navItems.map((item) => {
+            {items.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;
               return item?.items && item?.items?.length > 0 ? (
                 <Collapsible

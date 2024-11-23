@@ -1,3 +1,5 @@
+'use client';
+
 import { AreaGraph } from './area-graph';
 import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
@@ -13,33 +15,50 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '@radix-ui/react-alert-dialog';
+import { AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
 
 export default function OverViewPage() {
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [linkedAccounts, setLinkedAccounts] = useState<{ id: number; name: string; riskLevel: string }[]>([]);
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
+
+  interface LinkedAccount {
+    id: number;
+    name: string;
+    riskLevel: string;
+  }
+
+  const handleUserClick = (user: string) => {
+    // Fetch linked accounts for the selected user
+    setSelectedUser(user);
+    setLinkedAccounts([
+      // Mock data for linked accounts
+      { id: 1, name: 'Account 1', riskLevel: 'High' },
+      { id: 2, name: 'Account 2', riskLevel: 'Medium' },
+    ]);
+  };
+
+  const handleAlertBank = () => {
+    // Handle alerting the bank
+    setShowAlertDialog(true);
+  };
+
   return (
     <PageContainer scrollable>
       <div className="space-y-2">
-        <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-2xl font-bold tracking-tight">
-            Hi, Welcome back 👋
-          </h2>
-          <div className="hidden items-center space-x-2 md:flex">
-            <CalendarDateRangePicker />
-            <Button>Download</Button>
-          </div>
-        </div>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics" disabled>
-              Analytics
-            </TabsTrigger>
+            <TabsTrigger value="analytics">Fraud Analytics</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Revenue
+                  Total Fraud Cases
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -55,16 +74,16 @@ export default function OverViewPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
+                  <div className="text-2xl font-bold">1,234</div>
                   <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
+                    +5.2% from last month
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Subscriptions
+                    High-Risk Transactions
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -82,15 +101,15 @@ export default function OverViewPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
+                  <div className="text-2xl font-bold">+567</div>
                   <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
+                    +3.8% from last month
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                  <CardTitle className="text-sm font-medium">Total Amount Lost</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -106,16 +125,16 @@ export default function OverViewPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
+                  <div className="text-2xl font-bold">$1,234,567.89</div>
                   <p className="text-xs text-muted-foreground">
-                    +19% from last month
+                    +10.4% from last month
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Active Now
+                    Fraud Detection Rate
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -131,9 +150,9 @@ export default function OverViewPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
+                  <div className="text-2xl font-bold">85%</div>
                   <p className="text-xs text-muted-foreground">
-                    +201 since last hour
+                    +2.1% from last month
                   </p>
                 </CardContent>
               </Card>
@@ -161,8 +180,101 @@ export default function OverViewPage() {
               </div>
             </div>
           </TabsContent>
+          <TabsContent value="analytics" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Fraud Statistics
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Number of Fraud Cases: 50</p>
+                  <p>High-Risk Transactions: 20</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Risk Trends
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Increasing risk in the last 30 days</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Real-Time Alerts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>3 new alerts</p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="space-y-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Suspicious User Clusters
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
+                    {/* Mock data for suspicious users */}
+                    {['User 1', 'User 2', 'User 3'].map((user) => (
+                      <Button key={user} onClick={() => handleUserClick(user)}>
+                        {user}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              {selectedUser && (
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Linked Accounts for {selectedUser}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul>
+                      {linkedAccounts.map((account) => (
+                        <li key={account.id}>
+                          {account.name} - Risk Level: {account.riskLevel}
+                        </li>
+                      ))}
+                    </ul>
+                    <Button onClick={handleAlertBank} className="mt-4">
+                      Alert Bank
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
+      {showAlertDialog && (
+        <AlertDialog open={showAlertDialog} onOpenChange={setShowAlertDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Alert Bank</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to alert the bank about this suspicious activity?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => setShowAlertDialog(false)}>
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </PageContainer>
   );
 }

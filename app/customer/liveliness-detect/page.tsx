@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, X, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,11 +16,13 @@ import {
 import { useRouter } from 'next/navigation';
 
 export default function Page() {
-    const [showWarning, setShowWarning] = useState(false);
-    const [verificationSuccess, setVerificationSuccess] = useState(false);
-    const [progress, setProgress] = useState(0); // State to manage progress
-    const [statusText, setStatusText] = useState('Verifying'); // State to manage status text
-    const router = useRouter();
+  const [showWarning, setShowWarning] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [progress, setProgress] = useState(0); // State to manage progress
+  const [statusText, setStatusText] = useState('Verifying'); // State to manage status text
+  const [cameraActive, setCameraActive] = useState(false); // State to manage camera
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,13 +30,17 @@ export default function Page() {
       setStatusText('Verification Successful');
     }, 5000);
 
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => Math.min(prev + 1, 100));
-    }, 50); // Update progress every 60ms to reach 100% in 6000ms
+    const progressInterval = setTimeout(() => {
+      const interval = setInterval(() => {
+        setProgress((prev) => Math.min(prev + 1, 100));
+      }, 50); // Update progress every 50ms to reach 100% in 5000ms
+
+      return () => clearInterval(interval);
+    }, 2000); // Delay progress bar movement for 2 seconds
 
     return () => {
       clearTimeout(timer);
-      clearInterval(progressInterval);
+      clearTimeout(progressInterval);
     };
   }, []);
 
@@ -48,11 +54,30 @@ export default function Page() {
     }
   }, [verificationSuccess, router]);
 
+  useEffect(() => {
+    setCameraActive(true); // Automatically start the camera when the component mounts
+  }, []);
+
+  useEffect(() => {
+    if (cameraActive) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch((err) => {
+          console.error("Error accessing camera: ", err);
+          setStatusText('Camera access denied');
+        });
+    }
+  }, [cameraActive]);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-black">
-      <div className="flex min-h-[800px] w-full max-w-md flex-col rounded-lg bg-white shadow-lg overflow-hidden">
+      <div className="flex min-h-[800px] w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg">
         {/* Header */}
-        <header className="flex items-center justify-between border-b p-4 bg-white z-10">
+        <header className="z-10 flex items-center justify-between border-b bg-white p-4">
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-6 w-6" />
@@ -65,34 +90,31 @@ export default function Page() {
         </header>
 
         <div className="pt-2 text-center text-black">
-                <h2 className="text-lg font-semibold mb-2">
-                  Position your face within the oval
-                </h2>
-                <p className="text-sm">to verify your identity</p>
-              </div>
-        {/* Main Content */}
-        <div className="flex-1 space-y-6 p-4 relative">
-          {/* GIF Background */}
-          <div 
-          className="absolute inset-0 z-0" 
-          style={{
-            backgroundImage: "url('https://media.giphy.com/media/SWnpGx4HGb1SNKdiMF/giphy.gif')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            clipPath: 'circle(32% at 50% 40%)',
-          }}
-        ></div>
+          <h2 className="mb-2 text-lg font-semibold">
+            Position your face within the oval
+          </h2>
+          <p className="text-sm">to verify your identity</p>
+        </div>
 
+        {/* Main Content */}
+        <div className="relative flex-1 space-y-6 p-4">
           {/* Red Ring */}
-          <div className="relative z-10 flex items-center justify-center h-full pt-[2.125rem]">
-            <div className="w-96 h-96 rounded-full border-8 border-red-500 flex items-center justify-center">
+          <div className="relative z-10 flex h-full items-center justify-center pt-[2.125rem]">
+            <div className="flex h-96 w-96 items-center justify-center rounded-full border-8 border-red-500 overflow-hidden">
+              <video
+                ref={videoRef}
+                autoPlay
+                className="h-full w-full object-cover"
+              />
             </div>
           </div>
 
-          <div className="relative z-10 flex flex-col items-center mt-4">
-            <div className="w-4/5 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-              <div className="bg-red-500 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
+          <div className="relative z-10 mt-4 flex flex-col items-center">
+            <div className="h-2.5 w-4/5 rounded-full bg-gray-200 dark:bg-gray-700">
+              <div
+                className="h-2.5 rounded-full bg-red-500"
+                style={{ width: `${progress}%` }}
+              ></div>
             </div>
             <p className="mt-2 text-lg">{statusText}</p>
           </div>
@@ -101,4 +123,3 @@ export default function Page() {
     </div>
   );
 }
-

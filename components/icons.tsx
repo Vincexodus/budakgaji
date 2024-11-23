@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   ArrowRight,
+  ChartScatter,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -9,8 +10,10 @@ import {
   CreditCard,
   File,
   FileText,
+  Gauge,
   HelpCircle,
   Image,
+  Landmark,
   Laptop,
   LayoutDashboardIcon,
   Loader2,
@@ -64,6 +67,9 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  landmark: Landmark,
+  chartScatter: ChartScatter,
+  gauge: Gauge,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
