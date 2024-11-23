@@ -36,8 +36,9 @@ import {
   Bell,
   ChevronRight,
   ChevronsUpDown,
-  CreditCard,
-  GalleryVerticalEnd,
+  Eye,
+  Landmark,
+  Flower,
   LogOut
 } from 'lucide-react';
 import paynet from '../../public/icons/paynet.svg';
@@ -46,11 +47,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
-
+import { useRouter } from 'next/navigation';
 
 export default function AppSidebar() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
 
   // Set the isPaynet flag based on the directory
   const isPaynet = pathname.startsWith('/dashboard');
@@ -58,8 +60,8 @@ export default function AppSidebar() {
   // Conditionally set the company name and nav items
   const company = {
     name: isPaynet ? 'PayNet' : 'Bank ABC',
-    logo: GalleryVerticalEnd,
-    plan: 'Enterprise'
+    logo: isPaynet ? Flower : Landmark,
+    plan: isPaynet ? 'In-House' : 'Enterprise'
   };
 
   const items = isPaynet ? navItems : bankNavItems;
@@ -78,7 +80,7 @@ export default function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
-          <SidebarGroupLabel>Overview</SidebarGroupLabel>
+          {/* <SidebarGroupLabel>Overview</SidebarGroupLabel> */}
           <SidebarMenu>
             {items.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;
@@ -151,9 +153,12 @@ export default function AppSidebar() {
                       alt={session?.user?.name || ''}
                     />
                     <AvatarFallback className="rounded-lg">
-                      {session?.user?.name?.slice(0, 2)?.toUpperCase() || 'CN'}
+                      {session?.user?.name?.slice(0, 2)?.toUpperCase() || (
+                        <Eye></Eye>
+                      )}
                     </AvatarFallback>
                   </Avatar>
+                  Switch View Mode
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
                       {session?.user?.name || ''}
@@ -171,47 +176,35 @@ export default function AppSidebar() {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage
-                        src={session?.user?.image || ''}
-                        alt={session?.user?.name || ''}
-                      />
-                      <AvatarFallback className="rounded-lg">
-                        {session?.user?.name?.slice(0, 2)?.toUpperCase() ||
-                          'CN'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">
-                        {session?.user?.name || ''}
-                      </span>
-                      <span className="truncate text-xs">
-                        {' '}
-                        {session?.user?.email || ''}
-                      </span>
-                    </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <BadgeCheck />
-                    Account
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push('/dashboard/overview');
+                    }}
+                  >
+                    Paynet
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard />
-                    Billing
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push('/bank_dashboard/bank_overview');
+                    }}
+                  >
+                    Bank Specific
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Bell />
-                    Notifications
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push('/customer/transfer-amount');
+                    }}
+                  >
+                    Customer
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push('/');
+                  }}
+                >
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

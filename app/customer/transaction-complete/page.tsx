@@ -65,7 +65,7 @@ export default function Page() {
         {/* Main Content */}
         <div className="flex-1 space-y-6 p-4">
           {/* Bank Logo and Title */}
-          <div className="flex justify-center items-center">
+          <div className="flex items-center justify-center">
             <CircleCheck className="h-20 w-20 text-green-500" />
           </div>
           <hr className="border-t border-gray-300" />
@@ -134,7 +134,7 @@ export default function Page() {
           </div>
         </div>
         {/* Bottom Buttons */}
-        <div className="flex justify-center p-4 space-x-4">
+        <div className="flex justify-center space-x-4 p-4">
           <Button
             className="w-2/3 bg-red-500 py-6 text-white hover:bg-red-600"
             onClick={() => router.push('/customer/transfer-amount')}
@@ -143,8 +143,8 @@ export default function Page() {
             Download Receipt
           </Button>
           <Button
-            className="w-2/3 bg-white border text-black py-6 hover:bg-gray-100"
-            onClick={() => console.log('Share')}
+            className="w-2/3 border bg-white py-6 text-black hover:bg-gray-100"
+            onClick={() => router.push('/dashboard/overview')}
           >
             <Share2 className="mr-2 h-5 w-5" />
             Share

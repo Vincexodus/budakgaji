@@ -146,7 +146,7 @@ export const navItems: NavItem[] = [
     shortcut: ['p', 'p'],
     isActive: false,
     items: [] // No child items
-  },
+  }
   // {
   //   title: 'Account',
   //   url: '#', // Placeholder as there is no direct link for the parent
@@ -178,60 +178,38 @@ export const navItems: NavItem[] = [
   // }
 ];
 
-
 // Bank Specific Sidebar (Ivy)
 export const bankNavItems: NavItem[] = [
   {
     title: 'Bank Dashboard',
-    url: '/dashboard/overview',
+    url: '/bank_dashboard/bank_overview',
     icon: 'dashboard',
     isActive: true,
     shortcut: ['d', 'd'],
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Bank stuff',
-    url: '/dashboard/banks',
-    icon: 'landmark',
+    title: 'Case Management',
+    url: '/bank_dashboard/case_management',
+    icon: 'squareChartGantt',
     shortcut: ['p', 'p'],
     isActive: false,
     items: [] // No child items
   },
   {
-    title: 'Bank stuff',
-    url: '/dashboard/log-performance',
-    icon: 'gauge',
+    title: 'Fraud Patterns',
+    url: '/bank_dashboard/fraud_patterns',
+    icon: 'chartScatter',
     shortcut: ['p', 'p'],
     isActive: false,
     items: [] // No child items
   },
-  // {
-  //   title: 'Account',
-  //   url: '#', // Placeholder as there is no direct link for the parent
-  //   icon: 'billing',
-  //   isActive: true,
-
-  //   items: [
-  //     {
-  //       title: 'Profile',
-  //       url: '/dashboard/profile',
-  //       icon: 'userPen',
-  //       shortcut: ['m', 'm']
-  //     },
-  //     {
-  //       title: 'Login',
-  //       shortcut: ['l', 'l'],
-  //       url: '/',
-  //       icon: 'login'
-  //     }
-  //   ]
-  // },
-  // {
-  //   title: 'Kanban',
-  //   url: '/dashboard/kanban',
-  //   icon: 'kanban',
-  //   shortcut: ['k', 'k'],
-  //   isActive: false,
-  //   items: [] // No child items
-  // }
+  {
+    title: 'Risk Analysis',
+    url: '/bank_dashboard/risk_analysis',
+    icon: 'chartSpline',
+    shortcut: ['p', 'p'],
+    isActive: false,
+    items: [] // No child items
+  }
 ];

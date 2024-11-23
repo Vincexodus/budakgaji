@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, X, AlertCircle, BadgeDollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,9 +15,11 @@ import {
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
+  const { setTheme } = useTheme();
   const router = useRouter();
   const handleContinue = () => {
     // Mock check for high-risk recipient
@@ -29,6 +31,11 @@ export default function Page() {
       console.log('Transfer completed');
     }
   };
+
+  useEffect(() => {
+    // Set the theme to light when the component mounts
+    setTheme('light');
+  }, [setTheme]);
   const handleConfirmTransfer = () => {
     setShowWarning(false);
     // Proceed with the transfer
@@ -64,11 +71,11 @@ export default function Page() {
               <p className="pb-2 text-gray-600">Amount</p>
               <div className="w-full">
                 <div className="flex items-center">
-                  <BadgeDollarSign className="h-6 w-6 text-gray-600 mr-2" />
+                  <BadgeDollarSign className="mr-2 h-6 w-6 text-gray-600" />
                   <Input
                     type="text"
                     value="RM 100.00"
-                    className="w-full bg-transparent font-semibold text-base"
+                    className="w-full bg-transparent text-base font-semibold"
                   />
                 </div>
               </div>

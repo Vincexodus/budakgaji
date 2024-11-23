@@ -2,6 +2,7 @@ import {
   AlertTriangle,
   ArrowRight,
   ChartScatter,
+  ChartSpline,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -26,6 +27,7 @@ import {
   Pizza,
   Plus,
   Settings,
+  SquareChartGantt,
   SunMedium,
   Trash,
   Twitter,
@@ -69,6 +71,8 @@ export const Icons = {
   laptop: Laptop,
   landmark: Landmark,
   chartScatter: ChartScatter,
+  chartSpline: ChartSpline,
+  squareChartGantt: SquareChartGantt,
   gauge: Gauge,
   gitHub: ({ ...props }: LucideProps) => (
     <svg

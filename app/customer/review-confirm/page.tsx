@@ -14,11 +14,18 @@ import {
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
+import { useEffect } from 'react';
 
 export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
   const router = useRouter();
+  const { setTheme } = useTheme();
 
+  useEffect(() => {
+    // Set the theme to light when the component mounts
+    setTheme('light');
+  }, [setTheme]);
   const handleContinue = () => {
     // Mock check for high-risk recipient
     const isHighRisk = true; // Set to true for demo
@@ -40,7 +47,11 @@ export default function Page() {
         {/* Header */}
         <header className="flex items-center justify-between border-b p-4">
           <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/customer/transfer-amount')}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => router.push('/customer/transfer-amount')}
+            >
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <h1 className="text-xl font-semibold">Transfer Money</h1>
@@ -155,30 +166,36 @@ export default function Page() {
         {/* High Risk Warning Dialog */}
         <AlertDialog open={showWarning} onOpenChange={setShowWarning}>
           <AlertDialogContent className="max-w-sm">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center text-red-600">
-              <AlertCircle className="mr-2 h-5 w-5" /> High-Risk Receipent Detected
-            </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2">
-              <p>This recipient account has been flagged as potentially suspicious. Please verify:</p>
-              <ul className="list-disc pl-4 space-y-1">
-                <li>You know and trust the recipient</li>
-                <li>You have verified the account details</li>
-                <li>You understand this transfer cannot be reversed</li>
-              </ul>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="w-full sm:w-auto">Cancel Transfer</AlertDialogCancel>
-            <AlertDialogAction 
-              className="w-full sm:w-auto bg-red-500 hover:bg-red-600"
-              onClick={() => {
-                router.push('/customer/liveliness-detect');
-              }}
-            >
-              Proceed Anyway
-            </AlertDialogAction>
-          </AlertDialogFooter>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center text-red-600">
+                <AlertCircle className="mr-2 h-5 w-5" /> High-Risk Receipent
+                Detected
+              </AlertDialogTitle>
+              <AlertDialogDescription className="space-y-2">
+                <p>
+                  This recipient account has been flagged as potentially
+                  suspicious. Please verify:
+                </p>
+                <ul className="list-disc space-y-1 pl-4">
+                  <li>You know and trust the recipient</li>
+                  <li>You have verified the account details</li>
+                  <li>You understand this transfer cannot be reversed</li>
+                </ul>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="w-full sm:w-auto">
+                Cancel Transfer
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="w-full bg-red-500 hover:bg-red-600 sm:w-auto"
+                onClick={() => {
+                  router.push('/customer/liveliness-detect');
+                }}
+              >
+                Proceed Anyway
+              </AlertDialogAction>
+            </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
       </div>

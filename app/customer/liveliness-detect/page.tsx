@@ -28,7 +28,7 @@ export default function Page() {
     const timer = setTimeout(() => {
       setVerificationSuccess(true);
       setStatusText('Verification Successful');
-    }, 5000);
+    }, 7000);
 
     const progressInterval = setTimeout(() => {
       const interval = setInterval(() => {
@@ -60,14 +60,15 @@ export default function Page() {
 
   useEffect(() => {
     if (cameraActive) {
-      navigator.mediaDevices.getUserMedia({ video: true })
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
         .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
           }
         })
         .catch((err) => {
-          console.error("Error accessing camera: ", err);
+          console.error('Error accessing camera: ', err);
           setStatusText('Camera access denied');
         });
     }
@@ -91,7 +92,7 @@ export default function Page() {
 
         <div className="pt-2 text-center text-black">
           <h2 className="mb-2 text-lg font-semibold">
-            Position your face within the oval
+            Position your face within the circle
           </h2>
           <p className="text-sm">to verify your identity</p>
         </div>
@@ -100,7 +101,7 @@ export default function Page() {
         <div className="relative flex-1 space-y-6 p-4">
           {/* Red Ring */}
           <div className="relative z-10 flex h-full items-center justify-center pt-[2.125rem]">
-            <div className="flex h-96 w-96 items-center justify-center rounded-full border-8 border-red-500 overflow-hidden">
+            <div className="flex h-96 w-96 items-center justify-center overflow-hidden rounded-full border-8 border-red-500">
               <video
                 ref={videoRef}
                 autoPlay
