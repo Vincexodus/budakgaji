@@ -20,12 +20,7 @@ import { useEffect } from 'react';
 export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
   const router = useRouter();
-  const { setTheme } = useTheme();
 
-  useEffect(() => {
-    // Set the theme to light when the component mounts
-    setTheme('light');
-  }, [setTheme]);
   const handleContinue = () => {
     // Mock check for high-risk recipient
     const isHighRisk = true; // Set to true for demo

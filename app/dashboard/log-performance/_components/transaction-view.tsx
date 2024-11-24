@@ -4,6 +4,7 @@ import {
   generateMockTransactions
 } from '../../../../lib/mockData';
 import { TransactionModal } from '../../../../components/modal/transaction-modal';
+import { PerformanceCharts } from './performance-chart';
 
 export function TransactionView() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -12,7 +13,7 @@ export function TransactionView() {
 
   useEffect(() => {
     // Initial load of transactions
-    setTransactions(generateMockTransactions(10));
+    setTransactions(generateMockTransactions(100));
 
     // Simulating real-time updates
     const interval = setInterval(() => {
@@ -30,10 +31,11 @@ export function TransactionView() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className=" mx-auto">
+      <PerformanceCharts />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-black text-white">
-          <thead className="bg-gray-800">
+          <thead className="bg-gray-800 ">
             <tr>
               <th className="px-4 py-2">ID</th>
               <th className="px-4 py-2">Timestamp</th>
@@ -41,11 +43,12 @@ export function TransactionView() {
               <th className="px-4 py-2">Source Bank</th>
               <th className="px-4 py-2">Destination Bank</th>
               <th className="px-4 py-2">Fraud Indicator</th>
+              <th className="px-4 py-2">Fraud Type</th>
               <th className="px-4 py-2">Risk Score</th>
               <th className="px-4 py-2">Alert Triggered</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {transactions.map((transaction) => (
               <tr
                 key={transaction.id}
@@ -77,6 +80,9 @@ export function TransactionView() {
                   >
                     {transaction.fraudIndicator}
                   </span>
+                </td>
+                <td className="border px-4 py-2">
+                  {transaction.fraudType ? transaction.fraudType : '-'}
                 </td>
                 <td className="border px-4 py-2">
                   {transaction.riskScore.toFixed(2)}

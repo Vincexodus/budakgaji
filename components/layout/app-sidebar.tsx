@@ -41,7 +41,6 @@ import {
   Flower,
   LogOut
 } from 'lucide-react';
-import paynet from '../../public/icons/paynet.svg';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

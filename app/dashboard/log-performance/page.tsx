@@ -28,9 +28,9 @@ export default function Page({ searchParams }: pageProps) {
     <PageContainer>
       <Heading
         title="Logs and Performance"
-        description="Monitor and manage transactions"
+        description="Monitor log and performance"
       />
-      <Separator />
+      {/* <Separator />
       <div className="flex items-center justify-between py-4">
         <Link
           href="/dashboard/log-performance/new"
@@ -42,7 +42,7 @@ export default function Page({ searchParams }: pageProps) {
           <Plus className="mr-2 h-4 w-4" />
           New Transaction
         </Link>
-      </div>
+      </div> */}
       <Suspense fallback={<DataTableSkeleton />}>
         <TransactionView />
       </Suspense>
