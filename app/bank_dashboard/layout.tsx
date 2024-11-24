@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'DuitShield (Bank Specific)',
+  title: 'DuitGuard (Bank Specific)',
   description: 'Basic dashboard with Next.js and Shadcn'
 };
 

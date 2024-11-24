@@ -1,7 +1,7 @@
 import CaseManagement from './_components/casemanagement';
 
 export const metadata = {
-  title: 'Bank Dashboard : Bank Overview'
+  title: 'Bank Dashboard : Case Management'
 };
 
 export default function page() {

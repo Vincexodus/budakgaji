@@ -21,7 +21,7 @@ export function TransactionView() {
         generateMockTransactions(1)[0],
         ...prev.slice(0, 49)
       ]);
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
