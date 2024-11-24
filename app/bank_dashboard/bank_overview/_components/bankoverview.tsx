@@ -116,6 +116,7 @@ export default function BankOverViewPage() {
   return (
     <PageContainer scrollable>
       <div className="space-y-6">
+        {' '}
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           Investigation Dashboard
         </h1>

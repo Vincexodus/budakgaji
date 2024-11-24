@@ -1,5 +1,6 @@
 'use client';
 
+'use client';
 import { AreaGraph } from './area-graph';
 import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
@@ -16,12 +17,45 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState } from 'react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '@radix-ui/react-alert-dialog';
-import { AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle
+} from '@radix-ui/react-alert-dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer
+} from 'recharts';
+import {
+  Network,
+  Shield,
+  AlertTriangle,
+  Clock,
+  UserX,
+  ChevronDown,
+  ChevronUp
+} from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
+import {
+  AlertDialogFooter,
+  AlertDialogHeader
+} from '@/components/ui/alert-dialog';
 
 export default function OverViewPage() {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [linkedAccounts, setLinkedAccounts] = useState<{ id: number; name: string; riskLevel: string }[]>([]);
+  const [linkedAccounts, setLinkedAccounts] = useState<
+    { id: number; name: string; riskLevel: string }[]
+  >([]);
   const [showAlertDialog, setShowAlertDialog] = useState(false);
 
   interface LinkedAccount {
@@ -36,7 +70,7 @@ export default function OverViewPage() {
     setLinkedAccounts([
       // Mock data for linked accounts
       { id: 1, name: 'Account 1', riskLevel: 'High' },
-      { id: 2, name: 'Account 2', riskLevel: 'Medium' },
+      { id: 2, name: 'Account 2', riskLevel: 'Medium' }
     ]);
   };
 
@@ -45,20 +79,46 @@ export default function OverViewPage() {
     setShowAlertDialog(true);
   };
 
+  const suspiciousUsers = [
+    {
+      id: 1,
+      riskScore: 85,
+      cluster: 'A',
+      linkedAccounts: ['user123', 'user456', 'user789'],
+      transactions: 45,
+      flaggedAmount: 25000
+    },
+    {
+      id: 2,
+      riskScore: 92,
+      cluster: 'B',
+      linkedAccounts: ['user234', 'user567'],
+      transactions: 67,
+      flaggedAmount: 35000
+    },
+    {
+      id: 3,
+      riskScore: 78,
+      cluster: 'C',
+      linkedAccounts: ['user345', 'user678', 'user901'],
+      transactions: 39,
+      flaggedAmount: 18000
+    }
+  ];
+
   return (
     <PageContainer scrollable>
       <div className="space-y-2">
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Fraud Analytics</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                  Total Fraud Cases
+                    Total Fraud Cases
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +169,9 @@ export default function OverViewPage() {
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Amount Lost</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Total Amount Lost
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -158,103 +220,106 @@ export default function OverViewPage() {
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+              {/* Bar Graph - Spanning 4 Columns */}
               <div className="col-span-4">
                 <BarGraph />
               </div>
-              <Card className="col-span-4 md:col-span-3">
-                <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
-              </Card>
-              <div className="col-span-4">
-                <AreaGraph />
-              </div>
-              <div className="col-span-4 md:col-span-3">
+
+              {/* Pie Graph - Spanning 3 Columns */}
+              <div className="col-span-3">
                 <PieGraph />
               </div>
+
+              {/* Area Graph - Spanning Full Row */}
+              <div className="col-span-7">
+                <AreaGraph />
+              </div>
             </div>
           </TabsContent>
-          <TabsContent value="analytics" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Fraud Statistics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Number of Fraud Cases: 50</p>
-                  <p>High-Risk Transactions: 20</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Risk Trends
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Increasing risk in the last 30 days</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Real-Time Alerts
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>3 new alerts</p>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="space-y-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Suspicious User Clusters
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4">
-                    {/* Mock data for suspicious users */}
-                    {['User 1', 'User 2', 'User 3'].map((user) => (
-                      <Button key={user} onClick={() => handleUserClick(user)}>
-                        {user}
-                      </Button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-              {selectedUser && (
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Linked Accounts for {selectedUser}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul>
-                      {linkedAccounts.map((account) => (
-                        <li key={account.id}>
-                          {account.name} - Risk Level: {account.riskLevel}
-                        </li>
-                      ))}
-                    </ul>
-                    <Button onClick={handleAlertBank} className="mt-4">
-                      Alert Bank
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </TabsContent>
+          <Card className="col-span-2">
+            <CardHeader>
+              <CardTitle>Suspicious User Clusters</CardTitle>
+              <CardDescription>
+                Users with high-risk scores and unusual activity
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px] pr-4">
+                {suspiciousUsers.map((user) => (
+                  <Card key={user.id} className="mb-4 last:mb-0">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">
+                          Cluster {user.cluster}
+                        </CardTitle>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setSelectedUser(
+                              selectedUser?.id === user.id ? null : user
+                            )
+                          }
+                        >
+                          {selectedUser?.id === user.id ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                      <CardDescription>
+                        Risk Score: {user.riskScore}% | Transactions:{' '}
+                        {user.transactions}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mb-2 flex items-center space-x-4">
+                        <Progress
+                          value={user.riskScore}
+                          className="flex-grow"
+                        />
+                        <span className="text-sm font-medium">
+                          {user.riskScore}%
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Flagged Amount: ${user.flaggedAmount.toLocaleString()}
+                        </span>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleAlertBank(user.id)}
+                        >
+                          Alert Bank
+                        </Button>
+                      </div>
+
+                      {selectedUser?.id === user.id && (
+                        <div className="mt-4 rounded-lg bg-muted p-4">
+                          <h4 className="mb-2 font-semibold">
+                            Linked Accounts
+                          </h4>
+                          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                            {user.linkedAccounts.map((account) => (
+                              <div
+                                key={account}
+                                className="flex items-center space-x-2"
+                              >
+                                <UserX className="h-4 w-4 text-destructive" />
+                                <span className="text-sm">{account}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </ScrollArea>
+            </CardContent>
+          </Card>
         </Tabs>
       </div>
       {showAlertDialog && (
@@ -263,7 +328,8 @@ export default function OverViewPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Alert Bank</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to alert the bank about this suspicious activity?
+                Are you sure you want to alert the bank about this suspicious
+                activity?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
