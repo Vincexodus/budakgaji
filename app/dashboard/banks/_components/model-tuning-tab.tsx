@@ -11,8 +11,12 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Brain } from 'lucide-react';
+import { configTabProps } from '@/lib/configTabProps';
 
-export default function ModelTuningTab({ activeBank, setActiveBank }) {
+export default function ModelTuningTab({
+  activeBank,
+  setActiveBank
+}: configTabProps) {
   return (
     <Card className="bg-black shadow-lg">
       <CardHeader>

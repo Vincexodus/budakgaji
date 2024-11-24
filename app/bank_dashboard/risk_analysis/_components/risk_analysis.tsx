@@ -39,7 +39,7 @@ interface User {
 
 interface FlowNode {
   id: string;
-  type: string;
+  type: 'sender' | 'intermediary' | 'receiver';
   name: string;
   flagged: boolean;
 }
@@ -77,18 +77,16 @@ const mockRiskScore: RiskScoreData = {
   ]
 };
 
-const mockFlow = {
-  nodes: [
-    { id: '1', type: 'sender', name: 'John Doe', flagged: true },
-    {
-      id: '2',
-      type: 'intermediary',
-      name: 'Payment Processor',
-      flagged: false
-    },
-    { id: '3', type: 'receiver', name: 'Unknown Merchant', flagged: true }
-  ]
-};
+const mockFlow: FlowNode[] = [
+  { id: '1', type: 'sender', name: 'John Doe', flagged: true },
+  {
+    id: '2',
+    type: 'intermediary',
+    name: 'Payment Processor',
+    flagged: false
+  },
+  { id: '3', type: 'receiver', name: 'Unknown Merchant', flagged: true }
+];
 
 const mockRelatedTransactions: RelatedTransaction[] = [
   {
@@ -204,10 +202,7 @@ export default function RiskAnalysis() {
             onVerify={handleVerify}
             onFlagBank={handleFlagBank}
           />
-          <TransactionFlow
-            nodes={mockFlow.nodes}
-            onNodeClick={handleNodeClick}
-          />
+          <TransactionFlow nodes={mockFlow} onNodeClick={handleNodeClick} />
         </div>
 
         <div className="space-y-6">

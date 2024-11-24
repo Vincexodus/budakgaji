@@ -11,8 +11,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Building, Save } from 'lucide-react';
+import { configTabProps } from '@/lib/configTabProps';
 
-export default function BankConfigTab({ activeBank, setActiveBank }) {
+export default function BankConfigTab({
+  activeBank,
+  setActiveBank
+}: configTabProps) {
   return (
     <Card className="bg-black shadow-lg">
       <CardHeader>

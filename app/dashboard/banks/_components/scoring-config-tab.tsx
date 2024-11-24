@@ -10,8 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Settings } from 'lucide-react';
+import { configTabProps } from '@/lib/configTabProps';
 
-export default function ScoringConfigTab({ activeBank, setActiveBank }) {
+export default function ScoringConfigTab({
+  activeBank,
+  setActiveBank
+}: configTabProps) {
   return (
     <Card className="bg-black shadow-lg">
       <CardHeader>

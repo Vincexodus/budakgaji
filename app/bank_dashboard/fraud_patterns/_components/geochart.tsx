@@ -142,8 +142,8 @@ const GeoChart = () => {
           </div>
           <div className="flex gap-2">
             <Badge variant="destructive">High Risk</Badge>
-            <Badge variant="warning">Medium Risk</Badge>
-            <Badge variant="success">Low Risk</Badge>
+            <Badge variant="destructive">Medium Risk</Badge>
+            <Badge variant="default">Low Risk</Badge>
           </div>
         </div>
       </CardHeader>

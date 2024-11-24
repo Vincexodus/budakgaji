@@ -255,13 +255,13 @@ export default function OverViewPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() =>
-                            setSelectedUser(
-                              selectedUser?.id === user.id ? null : user
-                            )
-                          }
+                          // onClick={() =>
+                          //   setSelectedUser(
+                          //     selectedUser?.id === user.id ? null : user
+                          //   )
+                          // }
                         >
-                          {selectedUser?.id === user.id ? (
+                          {true ? (
                             <ChevronUp className="h-4 w-4" />
                           ) : (
                             <ChevronDown className="h-4 w-4" />
@@ -287,16 +287,12 @@ export default function OverViewPage() {
                         <span className="text-sm text-muted-foreground">
                           Flagged Amount: ${user.flaggedAmount.toLocaleString()}
                         </span>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleAlertBank(user.id)}
-                        >
+                        <Button variant="destructive" size="sm">
                           Alert Bank
                         </Button>
                       </div>
 
-                      {selectedUser?.id === user.id && (
+                      {true && (
                         <div className="mt-4 rounded-lg bg-muted p-4">
                           <h4 className="mb-2 font-semibold">
                             Linked Accounts

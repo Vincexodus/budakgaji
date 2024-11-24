@@ -21,6 +21,16 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogFooter,
+  AlertDialogAction
+} from '@/components/ui/alert-dialog';
 import { Bell } from 'lucide-react';
 import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
@@ -89,6 +99,13 @@ export default function BankOverViewPage() {
     useState(flaggedTransactions);
   const [searchTerm, setSearchTerm] = useState('');
   const [riskFilter, setRiskFilter] = useState('All');
+  const [showFraudAlert, setShowFraudAlert] = useState(true);
+  const [alertData, setAlertData] = useState({
+    userId: '12345',
+    from: 'ABC Bank',
+    fraudType: 'Credit Card Fraud',
+    transactionDetails: 'Attempted transaction of $5000 on 24th Nov 2024'
+  });
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -120,6 +137,44 @@ export default function BankOverViewPage() {
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           Investigation Dashboard
         </h1>
+        {/* Fraud Alert Dialog */}
+        <AlertDialog open={showFraudAlert} onOpenChange={setShowFraudAlert}>
+          <AlertDialogContent className="max-w-[500px]">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+                <Bell className="h-5 w-5" />
+                High Risk Alert Detected
+              </AlertDialogTitle>
+              <AlertDialogDescription className="space-y-4">
+                <div className="grid gap-2">
+                  <div className="flex justify-between">
+                    <span className="font-medium">User ID:</span>
+                    <span>{alertData.userId}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">Institution:</span>
+                    <span>{alertData.from}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">Fraud Type:</span>
+                    <span className="font-semibold text-destructive">
+                      {alertData.fraudType}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">Details:</span>
+                    <span>{alertData.transactionDetails}</span>
+                  </div>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={() => setShowFraudAlert(false)}>
+                Acknowledge
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         {/* Real-Time Alerts */}
         <Alert>
           <Bell className="h-4 w-4" />

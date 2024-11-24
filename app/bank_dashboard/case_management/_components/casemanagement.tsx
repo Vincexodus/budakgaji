@@ -187,7 +187,7 @@ export default function CaseManagement() {
                             : case_.status === 'In Progress'
                             ? 'default'
                             : case_.status === 'Under Review'
-                            ? 'warning'
+                            ? 'outline'
                             : 'destructive'
                         }
                       >
@@ -200,7 +200,7 @@ export default function CaseManagement() {
                           case_.priority === 'High'
                             ? 'destructive'
                             : case_.priority === 'Medium'
-                            ? 'warning'
+                            ? 'outline'
                             : 'secondary'
                         }
                       >
