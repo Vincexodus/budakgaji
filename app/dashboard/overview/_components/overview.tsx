@@ -50,6 +50,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader
 } from '@/components/ui/alert-dialog';
+import { FraudRankingTable } from './fraud-ranking';
 
 export default function OverViewPage() {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -220,18 +221,23 @@ export default function OverViewPage() {
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
-              {/* Bar Graph - Spanning 4 Columns */}
+              {/* Ranking Table */}
               <div className="col-span-4">
-                <BarGraph />
+                <FraudRankingTable></FraudRankingTable>
               </div>
 
               {/* Pie Graph - Spanning 3 Columns */}
               <div className="col-span-3">
                 <PieGraph />
               </div>
-
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+              {/* Bar Graph - Spanning 4 Columns */}
+              <div className="col-span-4">
+                <BarGraph />
+              </div>
               {/* Area Graph - Spanning Full Row */}
-              <div className="col-span-7">
+              <div className="col-span-3">
                 <AreaGraph />
               </div>
             </div>
