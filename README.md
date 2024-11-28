@@ -1,17 +1,10 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/9113740/201498864-2a900c64-d88f-4ed4-b5cf-770bcb57e1f5.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/9113740/201498152-b171abb8-9225-487a-821c-6ff49ee48579.png">
-</picture>
+<div align="center"><h1>DuitGuard</h1></div>
+<div align="center">A centralized real-time fraud detection system for P2P
+              transfers (DuitNow), leveraging Open Finance to aggregate bank
+              data, proactively detect fraud, alert users pre-transaction, and
+              streamline interbank communication. Built with <a href="https://github.com/Kiranism/next-shadcn-dashboard-starter.git">next-shadcn-dashboard-starter</a> </div>
 
-<div align="center"><strong>Next.js 14 Admin Dashboard Starter Template With Shadcn-ui</strong></div>
-<div align="center">Built with the Next.js App Router</div>
-<br />
-<div align="center">
-<a href="https://next-shadcn-dashboard-starter.vercel.app">View Demo</a>
-<span>
-</div>
-
-## Overview
+<!-- ## Overview
 
 This is a starter template using the following stack:
 
@@ -28,10 +21,8 @@ This is a starter template using the following stack:
 - Command+k interface - [kbar](https://kbar.vercel.app/)
 - Linting - [ESLint](https://eslint.org)
 - Pre-commit Hooks - [Husky](https://typicode.github.io/husky/)
-- Formatting - [Prettier](https://prettier.io)
-
-_If you are looking for a React admin dashboard starter, here is the [repo](https://github.com/Kiranism/react-shadcn-dashboard-starter)._
-
+- Formatting - [Prettier](https://prettier.io) -->
+<!--
 ## Pages
 
 | Pages                                                                                   | Specifications                                                                                                                      |
@@ -45,19 +36,64 @@ _If you are looking for a React admin dashboard starter, here is the [repo](http
 | [Profile](https://next-shadcn-dashboard-starter.vercel.app/dashboard/profile)           | Mutistep dynamic forms using react-hook-form and zod for form validation.                                                           |
 | [Kanban Board](https://next-shadcn-dashboard-starter.vercel.app/dashboard/kanban)       | A Drag n Drop task management board with dnd-kit and zustand to persist state locally.                                              |
 | [Not Found](https://next-shadcn-dashboard-starter.vercel.app/dashboard/notfound)        | Not Found Page Added in the root level                                                                                              |
-| -                                                                                       | -                                                                                                                                   |
+| -                                                                                       | -                                                                                                                                   | -->
 
-## Getting Started
+## Project Structure
+
+    project-root/
+    ├── frontend/
+    │   ├── .husky
+    │   ├── app/
+    │   ├── components/
+    │   ├── lib/
+    │   │   └── supabaseClient.ts
+    │   ├── pages/
+    │   ├── public/
+    │   ├── styles/
+    │   ├── README.md
+    │   ├── next.config.js
+    │   ├── package.json
+    │   └── tsconfig.json
+    ├── models/
+    │   └── main.py
+    └── README.md
+
+## Frontend Setup
 
 Follow these steps to clone the repository and start the development server:
 
-- `git clone https://github.com/vincexodus/payhack2024.git`
+- `git clone https://github.com/vincexodus/duitguard.git`
+- `cd frontend`
 - `npm install`
 - `npm run dev`
 
 You should now be able to access the application at http://localhost:3000.
 
-> [!WARNING]  
-> After cloning or forking the repository, be cautious when pulling or syncing with the latest changes, as this may result in breaking conflicts.
+## Supabase Setup
 
-Cheers! 🥂
+Follow these steps to set up Supabase:
+
+- Create a Supabase project at https://supabase.io/
+- Add your Supabase URL and key to `frontend/.env.local`
+- Run migrations and seeds as needed
+
+## Models Setup
+
+1. Create virtual python environment and activate it
+
+   ```bash
+   python -m virtualenv env
+   env\Scripts\activate
+   ```
+
+2. Download required python modules
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run server script
+
+   ```bash
+   py server.py
+   ```
