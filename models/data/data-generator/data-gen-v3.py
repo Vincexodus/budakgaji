@@ -7,14 +7,16 @@ import os
 
 class FraudDatasetGenerator:
     def __init__(self, total_transactions=250000, seed=42):
-        np.random.seed(seed)
-        self.total_transactions = total_transactions
-        self.accounts = self.generate_accounts()
-        self.fraud_scenarios = {
-            'fraud_rings': 0.05,  # 5% of transactions
-            'smurfing': 0.03,     # 3% of transactions
-            'account_takeover': 0.02  # 2% of transactions
-        }
+            np.random.seed(seed)
+            self.total_transactions = total_transactions
+            self.accounts = self.generate_accounts()
+            # Create account lookup dict for efficiency
+            self.account_lookup = {acc['AccountId']: acc for acc in self.accounts}
+            self.fraud_scenarios = {
+                'fraud_rings': 0.05,
+                'smurfing': 0.03,
+                'account_takeover': 0.02
+            }
 
     def generate_accounts(self):
         """Generate a pool of realistic Malaysian bank accounts"""
@@ -130,60 +132,69 @@ class FraudDatasetGenerator:
         return f"{year}{month}{day}-{unique}"
 
     def generate_transactions(self):
-        """Generate transactions with fraud scenarios"""
-        transactions = []
-        fraud_categories = list(self.fraud_scenarios.keys())
-        
-        for _ in range(self.total_transactions):
-            # Determine if this transaction is fraudulent
-            fraud_type = None
-            if random.random() < sum(self.fraud_scenarios.values()):
-                fraud_type = random.choices(fraud_categories, 
-                    weights=list(self.fraud_scenarios.values()))[0]
+            """Generate transactions with fraud scenarios"""
+            transactions = []
+            fraud_categories = list(self.fraud_scenarios.keys())
             
-            # Select sender and receiver accounts
-            sender = random.choice(self.accounts)
-            receiver = random.choice([a for a in self.accounts if a != sender])
+            for _ in range(self.total_transactions):
+                # Determine fraud type
+                fraud_type = None
+                if random.random() < sum(self.fraud_scenarios.values()):
+                    fraud_type = random.choices(fraud_categories, 
+                        weights=list(self.fraud_scenarios.values()))[0]
+                
+                # Select sender and receiver accounts using lookup
+                sender_id = random.choice(list(self.account_lookup.keys()))
+                sender = self.account_lookup[sender_id]
+                
+                # Select receiver excluding sender
+                receiver_id = random.choice([aid for aid in self.account_lookup.keys() if aid != sender_id])
+                receiver = self.account_lookup[receiver_id]
+                
+                # Base transaction details
+                transaction_amount = round(random.uniform(10, 5000), 2)
+                booking_datetime = self.generate_realistic_datetime()
+                
+                # Fraud-specific modifications
+                if fraud_type == 'fraud_rings':
+                    transaction_amount = round(random.uniform(500, 2000), 2)
+                    receiver = self.find_fraud_ring_account(sender)
+                elif fraud_type == 'smurfing':
+                    transaction_amount = round(random.uniform(50, 500), 2)
+                elif fraud_type == 'account_takeover':
+                    transaction_amount = round(random.uniform(1000, 5000), 2)
+                
+                # Create transaction with consistent account data
+                transaction = {
+                    'AccountId': sender['AccountId'],
+                    'AccountNumber': sender['AccountNumber'],
+                    'AccountType': sender['AccountType'],
+                    'PaymentScheme': 'DuitNow Transfer',
+                    'CreditDebitIndicator': 'DEBIT',
+                    'TransactionID': str(uuid.uuid4()),
+                    'TransactionType': 'TRANSFER',
+                    'CategoryPurposeCode': 'BONU',
+                    'Status': 'Completed',
+                    'BookingDateTime': booking_datetime,
+                    'ValueDateTime': booking_datetime,
+                    'TransactionAmount': transaction_amount,
+                    'AccountCurrencyAmount': transaction_amount,
+                    'AccountCurrency': 'MYR',
+                    'CreditorAccount': {
+                        'AccountId': receiver['AccountId'],
+                        'AccountNumber': receiver['AccountNumber'],
+                        'AccountHolderFullName': receiver['AccountHolderFullName']
+                    },
+                    'FraudType': fraud_type
+                }
+                
+                transactions.append(transaction)
+
+            # Convert to DataFrame and save both accounts and transactions
+            transactions_df = pd.DataFrame(transactions)
+            accounts_df = pd.DataFrame(self.accounts)
             
-            # Base transaction details
-            transaction_amount = round(random.uniform(10, 5000), 2)
-            booking_datetime = self.generate_realistic_datetime()
-            
-            # Fraud-specific modifications
-            if fraud_type == 'fraud_rings':
-                # Coordinated transfers between linked suspicious accounts
-                transaction_amount = round(random.uniform(500, 2000), 2)
-                receiver = self.find_fraud_ring_account(sender)
-            elif fraud_type == 'smurfing':
-                # Break large amount into smaller transfers
-                transaction_amount = round(random.uniform(50, 500), 2)
-            elif fraud_type == 'account_takeover':
-                # Unusual transfer behavior
-                transaction_amount = round(random.uniform(1000, 5000), 2)
-            
-            transaction = {
-                'AccountId': sender['AccountId'],
-                'AccountNumber': sender['AccountNumber'],
-                'AccountType': sender['AccountType'],
-                'PaymentScheme': 'DuitNow Transfer',
-                'CreditDebitIndicator': 'DEBIT',
-                'TransactionID': str(uuid.uuid4()),
-                'TransactionType': 'TRANSFER',
-                'CategoryPurposeCode': 'BONU',
-                'Status': 'Completed',
-                'BookingDateTime': booking_datetime,
-                'ValueDateTime': booking_datetime,
-                'TransactionAmount': transaction_amount,
-                'AccountCurrencyAmount': transaction_amount,
-                'AccountCurrency': 'MYR',
-                'CreditorAccountNumber': receiver['AccountNumber'],
-                'CreditorAccountName': receiver['AccountHolderFullName'],
-                'FraudType': fraud_type
-            }
-            
-            transactions.append(transaction)
-        
-        return pd.DataFrame(transactions)
+            return transactions_df, accounts_df
 
     def find_fraud_ring_account(self, sender):
         """Find an account potentially part of a fraud ring"""
@@ -234,7 +245,7 @@ class FraudDatasetGenerator:
 
 # Generate the dataset (keep existing code)
 generator = FraudDatasetGenerator(total_transactions=250000)
-transactions_df = generator.generate_transactions()
+transactions_df, accounts_df = generator.generate_transactions()
 balances_df = generator.generate_balances()
 train_df, val_df, test_df = generator.split_dataset(transactions_df)
 
@@ -267,15 +278,17 @@ try:
     val_path = os.path.join(datasets_path, 'validation_transactions.csv')
     test_path = os.path.join(datasets_path, 'test_transactions.csv')
     balances_path = os.path.join(datasets_path, 'balances.csv')
+    accounts_path = os.path.join(datasets_path, 'accounts.csv')
 
     # Save with error handling
+    accounts_df.to_csv(accounts_path, index=False)
     train_df.to_csv(train_path, index=False)
     val_df.to_csv(val_path, index=False)
     test_df.to_csv(test_path, index=False)
     balances_df.to_csv(balances_path, index=False)
 
-    # Verify files were created
-    for path in [train_path, val_path, test_path, balances_path]:
+    # Verify all files
+    for path in [accounts_path, train_path, val_path, test_path, balances_path]:
         if os.path.exists(path):
             print(f"Successfully saved: {path}")
             print(f"File size: {os.path.getsize(path)} bytes")
