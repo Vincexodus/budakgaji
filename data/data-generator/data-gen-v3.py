@@ -6,7 +6,7 @@ import random
 import os
 
 class FraudDatasetGenerator:
-    def __init__(self, total_transactions=250000, seed=42):
+    def __init__(self, total_transactions, seed=42):
             np.random.seed(seed)
             self.total_transactions = total_transactions
             self.accounts = self.generate_accounts()
@@ -123,7 +123,7 @@ class FraudDatasetGenerator:
         name_part = ''.join(random.choices('abcdefghijklmnopqrstuvwxyz0123456789', k=8))
         return f"{name_part}@{random.choice(domains)}"
 
-    def generate_malaysian_state_code():
+    def generate_malaysian_state_code(self):
         """Generate valid Malaysian state codes"""
         state_codes = {
             'Johor': ['01', '21', '22', '23', '24'],
@@ -285,7 +285,7 @@ base_path = os.path.normpath(os.path.join(script_dir, "../../data/"))
 
 # Modified path handling
 try:
-    version = "v3.1"
+    version = "v3.2"
     datasets_path = os.path.join(base_path, version)
     
     print(f"Script directory: {script_dir}")
