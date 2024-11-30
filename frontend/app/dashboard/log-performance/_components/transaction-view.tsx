@@ -37,7 +37,7 @@ export function TransactionView() {
     useEffect(() => {
       const fetchTransactions = async () => {
         const { data, error } = await supabase
-          .from('valid_transaction')
+          .from('valid_transactions')
           .select(`
             AccountType,
             PaymentScheme,

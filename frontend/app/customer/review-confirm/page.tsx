@@ -1,7 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, X, AlertTriangle, AlertCircle } from 'lucide-react';
+import {
+  ArrowLeft,
+  X,
+  AlertTriangle,
+  AlertCircle,
+  CircleCheck,
+  Download,
+  Share2
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -14,13 +22,19 @@ import {
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
-import { useEffect } from 'react';
+
+const fraudulentReasons = [
+  'Why did you transfer money to this account?',
+  'Do you know the person you transferred money to?',
+  'Was the transfer amount correct?',
+  'Did you verify the account details before transferring?',
+  'Was this transfer authorized by you?'
+];
 
 export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const router = useRouter();
-
   const handleContinue = () => {
     // Mock check for high-risk recipient
     const isHighRisk = true; // Set to true for demo
@@ -31,11 +45,24 @@ export default function Page() {
       console.log('Transfer completed');
     }
   };
-  const handleConfirmTransfer = () => {
-    setShowWarning(false);
-    // Proceed with the transfer
-    console.log('Transfer completed despite warning:');
+
+  const handleNext = () => {
+    if (currentQuestionIndex < fraudulentReasons.length) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      setShowWarning(false);
+      setCurrentQuestionIndex(0);
+      // Proceed with the transfer
+      console.log('Transfer completed despite warning:');
+    }
   };
+
+  const handleCancel = () => {
+    setShowWarning(false);
+    setCurrentQuestionIndex(0);
+    router.push('/customer/transfer-amount');
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-black">
       <div className="flex min-h-[800px] w-full max-w-md flex-col rounded-lg bg-white shadow-lg">
@@ -157,43 +184,57 @@ export default function Page() {
             Agree & Continue
           </Button>
         </div>
-
-        {/* High Risk Warning Dialog */}
-        <AlertDialog open={showWarning} onOpenChange={setShowWarning}>
-          <AlertDialogContent className="max-w-sm">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center text-yellow-600">
-                <AlertCircle className="mr-2 h-5 w-5" /> Medium-Risk Receipent
-                Detected
-              </AlertDialogTitle>
-              <AlertDialogDescription className="space-y-2">
-                <p>
-                  This recipient account has been flagged as potentially
-                  suspicious. Please verify: # To-Do: List down reason of being flag, then to be fed into ollama
-                </p>
-                <ul className="list-disc space-y-1 pl-4">
-                  <li>You know and trust the recipient</li>
-                  <li>You have verified the account details</li>
-                  <li>You understand this transfer cannot be reversed</li>
-                </ul>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="w-full sm:w-auto">
-                Cancel Transfer
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className="w-full bg-red-500 hover:bg-red-600 sm:w-auto"
-                onClick={() => {
-                  router.push('/customer/liveliness-detect');
-                }}
-              >
-                Proceed Anyway
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
+
+      {/* High Risk Warning Dialog */}
+      <AlertDialog open={showWarning}>
+        <AlertDialogContent className="max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center text-yellow-600">
+              {currentQuestionIndex === 0
+                ? ' Medium-Risk Recipient Detected'
+                : ` Question ${currentQuestionIndex}`}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              {currentQuestionIndex === 0 ? (
+                <>
+                  <p>
+                    This recipient account has been flagged as potentially
+                    suspicious. Please verify:
+                  </p>
+                  <ul className="list-disc space-y-1 pl-4">
+                    <li>You know and trust the recipient</li>
+                    <li>You have verified the account details</li>
+                    <li>You understand this transfer cannot be reversed</li>
+                  </ul>
+                </>
+              ) : (
+                <p className="mt-4">
+                  {fraudulentReasons[currentQuestionIndex - 1]}
+                </p>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              className="w-full sm:w-auto"
+              onClick={handleCancel}
+            >
+              Cancel Transfer
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="w-full bg-red-500 hover:bg-red-600 sm:w-auto"
+              onClick={handleNext}
+            >
+              {currentQuestionIndex === 0
+                ? 'I wish to proceed by answering a few questions'
+                : currentQuestionIndex < fraudulentReasons.length - 1
+                ? 'Next'
+                : 'Finish'}{' '}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
