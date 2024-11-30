@@ -25,7 +25,6 @@ export default function Page() {
   const [amount , setAmount] = useState("");
 
   
-
   useEffect(() => {
     // Set the theme to light when the component mounts
     setTheme('light');
@@ -71,11 +70,9 @@ export default function Page() {
                 </div>
               </div>
             </div>
-            
           </div>
 
           {/* Bank Logo and Title */}
-
           <div className="space-y-1">
             <div className="">
               <p className="pb-2 text-gray-600">Amount</p>

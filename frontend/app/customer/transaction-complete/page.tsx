@@ -31,21 +31,6 @@ export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
   const router = useRouter();
 
-  const handleContinue = () => {
-    // Mock check for high-risk recipient
-    const isHighRisk = true; // Set to true for demo
-    if (isHighRisk) {
-      setShowWarning(true);
-    } else {
-      // Proceed with transfer
-      console.log('Transfer completed');
-    }
-  };
-  const handleConfirmTransfer = () => {
-    setShowWarning(false);
-    // Proceed with the transfer
-    console.log('Transfer completed despite warning:');
-  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-black">
       <div className="flex min-h-[800px] w-full max-w-md flex-col rounded-lg bg-white shadow-lg">
