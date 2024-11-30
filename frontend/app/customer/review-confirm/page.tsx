@@ -50,8 +50,8 @@ export default function Page() {
     if (currentQuestionIndex < fraudulentReasons.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
+      router.push('/customer/transaction-complete');
       setShowWarning(false);
-      setCurrentQuestionIndex(0);
       // Proceed with the transfer
       console.log('Transfer completed despite warning:');
     }
