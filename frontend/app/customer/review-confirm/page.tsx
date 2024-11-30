@@ -75,7 +75,7 @@ export default function Page() {
                 <div className="flex items-center justify-end space-x-2">
                   <div className="text-right">
                     <div className="flex justify-end">
-                      <AlertTriangle className="h-5 w-5 text-red-500" />
+                      <AlertTriangle className="h-5 w-5 text-yellow-500" />
                       <p className="pl-2 font-semibold">JOHN DOE</p>
                     </div>
                     <p className="text-gray-600">
@@ -162,14 +162,14 @@ export default function Page() {
         <AlertDialog open={showWarning} onOpenChange={setShowWarning}>
           <AlertDialogContent className="max-w-sm">
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center text-red-600">
-                <AlertCircle className="mr-2 h-5 w-5" /> High-Risk Receipent
+              <AlertDialogTitle className="flex items-center text-yellow-600">
+                <AlertCircle className="mr-2 h-5 w-5" /> Medium-Risk Receipent
                 Detected
               </AlertDialogTitle>
               <AlertDialogDescription className="space-y-2">
                 <p>
                   This recipient account has been flagged as potentially
-                  suspicious. Please verify:
+                  suspicious. Please verify: # To-Do: List down reason of being flag, then to be fed into ollama
                 </p>
                 <ul className="list-disc space-y-1 pl-4">
                   <li>You know and trust the recipient</li>
