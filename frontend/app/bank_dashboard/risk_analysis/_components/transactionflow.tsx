@@ -10,6 +10,7 @@ interface Node {
   type: 'sender' | 'intermediary' | 'receiver';
   name: string;
   flagged: boolean;
+  children?: Node[];
 }
 
 interface TransactionFlowProps {
@@ -18,43 +19,34 @@ interface TransactionFlowProps {
 }
 
 export function TransactionFlow({ nodes, onNodeClick }: TransactionFlowProps) {
+  const renderNode = (node: Node) => (
+    <div key={node.id} className="flex flex-col items-center">
+      <div
+        onClick={() => onNodeClick(node.id)}
+        className={cn(
+          'relative flex cursor-pointer flex-col items-center rounded-lg p-4 transition-colors',
+          node.flagged ? 'bg-red-500 text-white' : 'bg-gray-200 text-black'
+        )}
+      >
+        {node.flagged && <AlertCircle className="absolute top-0 right-0 h-4 w-4 text-red-500" />}
+        <div>{node.name}</div>
+      </div>
+      {node.children && (
+        <div className="ml-4 mt-2 flex flex-col space-y-2">
+          {node.children.map((child) => renderNode(child))}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Transaction Flow</CardTitle>
+        <CardTitle>Transaction Network</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-2">
-          {nodes.map((node, index) => (
-            <React.Fragment key={node.id}>
-              <div
-                onClick={() => onNodeClick(node.id)}
-                className={cn(
-                  'relative flex cursor-pointer flex-col items-center rounded-lg p-4 transition-colors',
-                  node.flagged ? 'bg-red-50' : 'bg-muted',
-                  'hover:bg-opacity-80'
-                )}
-              >
-                <div
-                  className={cn(
-                    'text-sm font-medium',
-                    node.flagged ? 'text-red-700' : 'text-foreground'
-                  )}
-                >
-                  {node.name}
-                </div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {node.type}
-                </div>
-                {node.flagged && (
-                  <AlertCircle className="absolute -right-2 -top-2 h-4 w-4 text-red-500" />
-                )}
-              </div>
-              {index < nodes.length - 1 && (
-                <ArrowRight className="h-5 w-5 text-muted-foreground" />
-              )}
-            </React.Fragment>
-          ))}
+          {nodes.map((node) => renderNode(node))}
         </div>
       </CardContent>
     </Card>

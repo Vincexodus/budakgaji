@@ -14,6 +14,8 @@ interface CreditorAccount {
 }
 
 interface Transaction {
+  AccountId: string;
+  AccountNumber: number;
   AccountType: string;
   PaymentScheme: string;
   CreditDebitIndicator: string;
@@ -39,6 +41,9 @@ export function TransactionView() {
         const { data, error } = await supabase
           .from('valid_transactions')
           .select(`
+            TransactionID,
+            AccountId,
+            AccountNumber,
             AccountType,
             PaymentScheme,
             CreditDebitIndicator,
@@ -91,7 +96,9 @@ export function TransactionView() {
         <table className="min-w-full bg-black text-white">
           <thead className="bg-gray-800 ">
             <tr>
-              <th className="px-4 py-2">ID</th>
+              <th className="px-4 py-2">Transaction Id</th>
+              <th className="px-4 py-2">Account Id</th>
+              <th className="px-4 py-2">Account Number</th>
               <th className="px-4 py-2">Booking Date Time</th>
               <th className="px-4 py-2">Value Date Time</th>
               <th className="px-4 py-2">Account Type</th>
@@ -115,6 +122,12 @@ export function TransactionView() {
               >
                 <td className="border px-4 py-2">
                   {transaction.TransactionID.slice(0, 8)}
+                </td>
+                <td className="border px-4 py-2">
+                  {transaction.AccountId.slice(0, 8)}
+                </td>
+                <td className="border px-4 py-2">
+                  {transaction.AccountNumber}
                 </td>
                 <td className="border px-4 py-2">
                   {new Date(transaction.BookingDateTime).toLocaleString()}
@@ -163,7 +176,7 @@ export function TransactionView() {
                   {transaction.AccountCurrency}
                 </td>
                 <td className="border px-4 py-2">
-                  {transaction.CreditorAccount.AccountId}
+                  {transaction.CreditorAccount.toString()}
                 </td>
                 <td className="border px-4 py-2 text-black">
                   <span

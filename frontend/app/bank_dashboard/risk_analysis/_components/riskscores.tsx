@@ -21,7 +21,7 @@ export function RiskScore({ score, reasons }: RiskScoreProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Risk Assessment
+          Risk Assessment (Behavioral)
           <Shield className="h-5 w-5 text-blue-600" />
         </CardTitle>
       </CardHeader>

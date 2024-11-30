@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Shield, Smartphone, AlertTriangle } from 'lucide-react';
+import { User, Shield, Smartphone, AlertTriangle, CircleArrowOutUpRightIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -129,6 +129,7 @@ export function UserProfile({
           <h4 className="mb-3 text-sm font-medium text-gray-700">
             Linked Banks
           </h4>
+          <div className="space-x-3">
           <Button
             onClick={() => setIsDialogOpen(true)}
             variant="outline"
@@ -136,6 +137,12 @@ export function UserProfile({
           >
             View Linked Banks
           </Button>
+          <Button onClick={onVerify} className="flex-1">
+            <Shield className="mr-2 h-4 w-4" />
+            Request Verification
+          </Button>
+
+          </div>
         </div>
 
         {/* User Actions */}
@@ -146,11 +153,11 @@ export function UserProfile({
             className="flex-1 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-500"
           >
             <AlertTriangle className="mr-2 h-4 w-4" />
-            Suspend User
+            Freeze bank account
           </Button>
-          <Button onClick={onVerify} className="flex-1">
-            <Shield className="mr-2 h-4 w-4" />
-            Request Verification
+          <Button onClick={onVerify} className="flex-1 bg-red-500  hover:bg-red-500">
+            <CircleArrowOutUpRightIcon className="mr-2 h-4 w-4 " />
+            Blacklist User
           </Button>
         </div>
       </CardContent>
@@ -169,7 +176,7 @@ export function UserProfile({
             {/* Safe check for undefined banks */}
             {(user.linkedBanks ?? []).map((bank, index) => (
               <div key={index} className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-white">
                   {bank}
                 </span>
                 <Button
@@ -177,9 +184,10 @@ export function UserProfile({
                   variant="outline"
                   className="border-red-500 text-red-500 hover:bg-red-50 hover:text-red-500"
                 >
-                  Flag Bank
+                  Alert Bank
                 </Button>
               </div>
+              
             ))}
           </div>
 
