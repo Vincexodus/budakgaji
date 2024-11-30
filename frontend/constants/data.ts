@@ -189,8 +189,8 @@ export const bankNavItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Case Management',
-    url: '/bank_dashboard/case_management',
+    title: 'Fraud Monitor',
+    url: '/bank_dashboard/fraud_monitor',
     icon: 'squareChartGantt',
     shortcut: ['p', 'p'],
     isActive: false,

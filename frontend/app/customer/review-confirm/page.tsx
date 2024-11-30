@@ -21,11 +21,6 @@ import {
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import { useRouter, useSearchParams } from 'next/navigation';
-import OpenAI from 'openai';
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
-  dangerouslyAllowBrowser: true
-});
 
 const fraudulentReasons = [
   'Unauthorized Use of Payment Method',
@@ -35,37 +30,55 @@ const fraudulentReasons = [
 ];
 
 const fetchCompletion = async () => {
-  const prompt = `Generate one question for each reason related to suspicious transactions in json format: ${fraudulentReasons
+  const prompt = `Generate one confirmation question for each reason related to suspicious transactions in json format only: ${fraudulentReasons
     .map((reason, index) => `${index + 1}) ${reason}`)
-    .join(', ')}. Just return the questions.`;
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo-1106',
-    messages: [{ role: 'user', content: prompt }]
-  });
-  const content = completion.choices[0].message.content;
-  const questions = content ? JSON.parse(content) : [];
-  return questions;
-};
+    .join(', ')}.`;
 
+  try {
+    const response = await fetch('http://localhost:11434/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'llama3.2',
+        stream: false,
+        prompt,
+      }),
+    });
+
+    const data = await response.json();
+    const questions = data ? JSON.parse(data) : [];
+    return questions;
+  } catch (error) {
+    console.error('Error fetching questions from Ollama:', error);
+    return fraudulentReasons.map(reason => `Could not generate question for: ${reason}`);
+  }
+};
 export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
-  const [isTransactionClean, setIsTransactionClean] = useState(true); // Add this state
+  const [isTransactionClean, setIsTransactionClean] = useState(false); // Add this state
   const [output, setOutput] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const amount = searchParams.get('amount');
   const accountNumber = searchParams.get('accountNumber');
-
+  
   useEffect(() => {
     if (!isTransactionClean) {
-    fetchCompletion().then((questions) => {
-      setQuestions(questions);
-    });
-  }
+      setLoading(true);
+      fetchCompletion().then((questions) => {
+        setQuestions(questions);
+        setLoading(false);
+      }).catch(() => {
+        setLoading(false);
+      });
+    }
   }, []);
+  
   const handleContinue = () => {
     // Mock check for high-risk recipient
     if (isTransactionClean) {

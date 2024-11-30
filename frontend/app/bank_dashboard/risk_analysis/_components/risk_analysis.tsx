@@ -42,6 +42,7 @@ interface FlowNode {
   type: 'sender' | 'intermediary' | 'receiver';
   name: string;
   flagged: boolean;
+  children?: FlowNode[];
 }
 
 interface RelatedTransaction {
@@ -62,9 +63,9 @@ interface CaseNote {
 // Mock data
 const mockTransaction: Transaction = {
   id: 'TXN-123456789',
-  userId: 'USR-987654321',
-  amount: 15000,
-  paymentMethod: 'Credit Card',
+  userId: '000318DE-1C1',
+  amount: 1000,
+  paymentMethod: 'DuitNow',
   timestamp: '2024-03-14 15:30:45 UTC'
 };
 
@@ -72,7 +73,7 @@ const mockRiskScore: RiskScoreData = {
   score: 85,
   reasons: [
     { code: 'Unusual Location', confidence: 90 },
-    { code: 'Amount Mismatch', confidence: 75 },
+    { code: 'Large Amount Transfer', confidence: 75 },
     { code: 'Device Change', confidence: 60 }
   ]
 };
@@ -177,7 +178,23 @@ export default function RiskAnalysis() {
   const handleAssign = (userId: string) => {
     console.log('Assign to:', userId);
   };
-
+  const nodes: FlowNode[] = [
+    { id: '1', type: 'sender', name: 'User A', flagged: false },
+    {
+      id: '2',
+      type: 'intermediary',
+      name: 'Bank B',
+      flagged: true,
+      children: [
+        {
+          id: '3',
+          type: 'receiver',
+          name: 'User C',
+          flagged: false,
+        },
+      ],
+    },
+  ];
   return (
     <div className="container mx-auto space-y-6 py-6">
       <header className="flex items-center justify-between">
@@ -202,7 +219,7 @@ export default function RiskAnalysis() {
             onVerify={handleVerify}
             onFlagBank={handleFlagBank}
           />
-          <TransactionFlow nodes={mockFlow} onNodeClick={handleNodeClick} />
+          <TransactionFlow nodes={nodes} onNodeClick={handleNodeClick} />
         </div>
 
         <div className="space-y-6">
@@ -210,13 +227,13 @@ export default function RiskAnalysis() {
             transactions={mockRelatedTransactions}
             onViewTransaction={handleViewTransaction}
           />
-          <CaseNotes
+          {/* <CaseNotes
             notes={mockNotes}
             onAddNote={handleAddNote}
             onEscalate={handleEscalate}
             onMarkSafe={handleMarkSafe}
             onAssign={handleAssign}
-          />
+          /> */}
         </div>
       </div>
     </div>
