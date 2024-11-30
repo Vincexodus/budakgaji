@@ -21,26 +21,23 @@ import {
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import { useRouter, useSearchParams } from 'next/navigation';
-import OpenAI from 'openai';
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
-  dangerouslyAllowBrowser: true
-});
+import OpenAI from "openai";
+const openai = new OpenAI(({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!, dangerouslyAllowBrowser: true }));
 
 const fraudulentReasons = [
   'Unauthorized Use of Payment Method',
   'Fake or Suspicious Merchant Website',
   'Fake Buyer or Seller',
-  'Suspiciously High Transaction Volume'
+  'Suspiciously High Transaction Volume',
 ];
 
 const fetchCompletion = async () => {
-  const prompt = `Generate one question for each reason related to suspicious transactions in json format: ${fraudulentReasons
-    .map((reason, index) => `${index + 1}) ${reason}`)
-    .join(', ')}. Just return the questions.`;
+  const prompt = `Generate one question for each reason related to suspicious transactions in json format: ${fraudulentReasons.map((reason, index) => `${index + 1}) ${reason}`).join(', ')}. Just return the questions.`;
   const completion = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo-1106',
-    messages: [{ role: 'user', content: prompt }]
+    model: "gpt-3.5-turbo-1106",
+    messages: [
+      { "role": "user", "content": prompt }
+    ]
   });
   const content = completion.choices[0].message.content;
   const questions = content ? JSON.parse(content) : [];
@@ -52,7 +49,7 @@ export default function Page() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
-  const [isTransactionClean, setIsTransactionClean] = useState(true); // Add this state
+
   const [output, setOutput] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -60,18 +57,18 @@ export default function Page() {
   const accountNumber = searchParams.get('accountNumber');
 
   useEffect(() => {
-    if (!isTransactionClean) {
-    fetchCompletion().then((questions) => {
-      setQuestions(questions);
+    fetchCompletion().then(questions => {
+      setQuestions(questions)
     });
-  }
   }, []);
   const handleContinue = () => {
     // Mock check for high-risk recipient
-    if (isTransactionClean) {
-      router.push(`/customer/transaction-complete?isTransactionClean=${isTransactionClean}`);
-    } else {
+    const isHighRisk = true; // Set to true for demo
+    if (isHighRisk) {
       setShowWarning(true);
+    } else {
+      // Proceed with transfer
+      console.log('Transfer completed');
     }
   };
 
@@ -99,6 +96,7 @@ export default function Page() {
   };
 
   return (
+
     <div className="flex min-h-screen items-center justify-center bg-black">
       <div className="flex min-h-[800px] w-full max-w-md flex-col rounded-lg bg-white shadow-lg">
         {/* Header */}
@@ -137,9 +135,7 @@ export default function Page() {
                 <div className="flex items-center justify-end space-x-2">
                   <div className="text-right">
                     <div className="flex justify-end">
-                      {!isTransactionClean && (
-                        <AlertTriangle className="h-5 w-5 text-yellow-500" />
-                      )}{' '}
+                      <AlertTriangle className="h-5 w-5 text-red-500" />
                       <p className="pl-2 font-semibold">JOHN DOE</p>
                     </div>
                     <p className="text-gray-600">
@@ -227,17 +223,17 @@ export default function Page() {
       <AlertDialog open={showWarning}>
         <AlertDialogContent className="max-w-sm">
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center text-yellow-600">
+            <AlertDialogTitle className="flex items-center text-red-600">
               {currentQuestionIndex === 0
-                ? ' Medium-Risk Recipient Detected'
+                ? ' High-Risk Recipient Detected'
                 : ` Question ${currentQuestionIndex}`}
             </AlertDialogTitle>
             <AlertDialogDescription className="space-y-2">
               {currentQuestionIndex === 0 ? (
                 <>
                   <p>
-                    This recipient account has been flagged as potentially
-                    suspicious. Due to:
+                    This recipient account has been flagged as highly
+                    suspicious. This transaction is blocked due to:
                   </p>
                   <ul className="list-disc space-y-1 pl-4">
                     {fraudulentReasons.map((reason, index) => (
@@ -248,30 +244,20 @@ export default function Page() {
               ) : (
                 <p className="mt-4">
                   {questions && questions[currentQuestionIndex - 1]}
-                </p>
+                  </p>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              className="w-full sm:w-auto"
+            <AlertDialogAction
+              className="w-full sm:w-auto bg-red-500"
               onClick={handleCancel}
             >
               Cancel Transfer
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="w-full bg-red-500 hover:bg-red-600 sm:w-auto"
-              onClick={handleNext}
-            >
-              {currentQuestionIndex === 0
-                ? 'I wish to proceed by answering a few questions'
-                : currentQuestionIndex < fraudulentReasons.length - 1
-                ? 'Next'
-                : 'Finish'}{' '}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
   );
-}
+};

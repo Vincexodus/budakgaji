@@ -22,8 +22,12 @@ import {
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const isTransactionClean = searchParams.get('isTransactionClean') === 'true';
+
   const [showWarning, setShowWarning] = useState(false);
   const router = useRouter();
 
@@ -78,7 +82,9 @@ export default function Page() {
                 <div className="flex items-center justify-end space-x-2">
                   <div className="text-right">
                     <div className="flex justify-end">
-                      <AlertTriangle className="h-5 w-5 text-red-500" />
+                      {!isTransactionClean && (
+                        <AlertTriangle className="h-5 w-5 text-yellow-500" />
+                      )}{' '}
                       <p className="pl-2 font-semibold">JOHN DOE</p>
                     </div>
                     <p className="text-gray-600">
@@ -137,7 +143,7 @@ export default function Page() {
         <div className="flex justify-center space-x-4 p-4">
           <Button
             className="w-2/3 bg-red-500 py-6 text-white hover:bg-red-600"
-            onClick={() => router.push('/customer/transfer-amount')}
+            onClick={() => router.push('/customer/transfer-account')}
           >
             <Download className="mr-2 h-5 w-5" />
             Download Receipt

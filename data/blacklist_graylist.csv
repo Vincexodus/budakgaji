@@ -1,0 +1,31 @@
+BIC_Code,Provider_Name,Account_ID,Account_Number,Account_Type,Account_Description,Account_Holder_Full_Name,ID_Type,ID_Value,Account_Holder_Email_Address,Account_Holder_Mobile_Number,Product_Type,Sharia_Compliance,Status,Reason
+MAYMYKL,Maybank,MAY100001,7.1239E+11,Savings,Maybank Premier Savings Account,Tan Siew Mei,NRIC,8.80505E+11,siewmei.tan@gmail.com,60123456701,Conventional,FALSE,Greylisted,Tax Evasion
+MAYMYKL,Maybank,MAY0012345678,7.12346E+11,Savings,CASA 365 Savings,Tan Wei Liang,NRIC,920404-10-1234,tanweiliang@example.com,60398765432,Conventional,FALSE,Blacklisted,Fraudulent activity
+MAYMYKL,Maybank,MAY100003,7.1239E+11,Savings,Maybank Savers 365,Liew Min Yee,NRIC,8.81212E+11,minyee.liew@gmail.com,60123456703,Conventional,FALSE,Greylisted,None
+MAYMYKL,Maybank,MAY100004,7.1239E+11,Current,Maybank Business Account,Ramesh Kumar,NRIC,9.10909E+11,ramesh.k@gmail.com,60123456704,Islamic,TRUE,Greylisted,Overdue credit card payments
+MAYMYKL,Maybank,MAY9988776655,1.12233E+11,Savings,Maybank Saver-i,Chan Wai Keat,NRIC,910707-07-5678,chan.waikeat@example.com,60355443322,Islamic,TRUE,Greylisted,Unpaid loans
+PBBEMYKL,Public Bank,PBB100001,8.4012E+11,Savings,PB Basic Savings Account,Wong Li Wei,NRIC,9.00101E+11,wong.li.wei@gmail.com,60126789001,Conventional,FALSE,Greylisted,None
+PBBEMYKL,Public Bank,PBB100002,8.4012E+11,Current,PB Corporate Account,Siti Nor Afiqah,NRIC,8.80707E+11,siti.nor.afiqah@gmail.com,60126789002,Islamic,TRUE,Greylisted,Suspicious transactions
+PBBEMYKL,Public Bank,PBB100003,8.4012E+11,Savings,PB Step-Up Savings Account,Lim Chee Wah,NRIC,8.51212E+11,lim.chee.wah@gmail.com,60126789003,Conventional,FALSE,Blacklisted,Money laundering
+PBBEMYKL,Public Bank,PBB100004,8.4012E+11,Current,PB Business Current Account,Arif Razak,NRIC,8.70909E+11,arif.razak@gmail.com,60126789004,Islamic,TRUE,Greylisted,Overdue credit card payments
+PBBEMYKL,Public Bank,PBB100005,8.4012E+11,Savings,PB Golden Saver Account,Farah Amelia,NRIC,9.40505E+11,farah.amelia@gmail.com,60126789005,Conventional,FALSE,Greylisted,None
+RHBBMYKL,RHB,RHB100001,7.5139E+11,Savings,RHB SmartSaver Account,Tan Wei Ming,NRIC,8.71001E+11,tan.wei.ming@gmail.com,60125678901,Conventional,FALSE,Greylisted,Tax evasion
+RHBBMYKL,RHB,RHB100002,7.5139E+11,Current,RHB BizCurrent Account,Lim Hui Yin,NRIC,8.60707E+11,lim.hui.yin@gmail.com,60125678902,Islamic,TRUE,Blacklisted,Fraudulent activity
+RHBBMYKL,RHB,RHB100003,7.5139E+11,Savings,RHB EasySaver Account,Ariff Roslan,NRIC,8.91212E+11,ariff.roslan@gmail.com,60125678903,Conventional,FALSE,Greylisted,Unpaid loans
+RHBBMYKL,RHB,RHB100004,7.5139E+11,Current,RHB Enterprise Account,Goh Mei Ling,NRIC,8.20404E+11,goh.mei.ling@gmail.com,60125678904,Islamic,TRUE,Blacklisted,Unauthorized withdrawals
+RHBBMYKL,RHB,RHB100005,7.5139E+11,Savings,RHB YoungSaver Account,Chan Jia Wei,NRIC,9.50101E+11,chan.jia.wei@gmail.com,60125678905,Conventional,FALSE,Greylisted,Overdue payments
+HLBBMYKL,Hong Leong Bank,HLB100001,7.6011E+11,Savings,HL Basic Savings Account,Tan Jia Min,NRIC,9.10101E+11,tan.jia.min@gmail.com,60129876501,Conventional,FALSE,Greylisted,Suspicious transactions
+HLBBMYKL,Hong Leong Bank,HLB1122334455,1.23457E+11,Savings,Hong Leong Savings Plus,Aminah Binti Ahmad,Passport,C1234567,aminah.ahmad@example.com,60377665544,Conventional,FALSE,Blacklisted,Account hacking
+HLBBMYKL,Hong Leong Bank,HLB100003,7.6011E+11,Savings,HL Prime Savings Account,Lim Wei Han,NRIC,8.90303E+11,lim.wei.han@gmail.com,60129876503,Conventional,FALSE,Greylisted,None
+HLBBMYKL,Hong Leong Bank,HLB100004,7.6011E+11,Current,HL SME Flexi Account,Arun Kumar Nair,NRIC,8.70404E+11,arun.kumar.nair@gmail.com,60129876504,Islamic,TRUE,Greylisted,Tax evasion
+HLBBMYKL,Hong Leong Bank,HLB100005,7.6011E+11,Savings,HL Junior Saver Account,Sophia Lee Hui Xin,NRIC,9.50505E+11,sophia.lee@gmail.com,60129876505,Conventional,FALSE,Greylisted,None
+BIMBMYKL,Bank Islam,BI100001,7.0011E+11,Savings,Basic Savings Account-i,Aisyah Rahmat,NRIC,9.00101E+11,aisyah.rahmat@gmail.com,60123456701,Islamic,TRUE,Greylisted,Insufficient Funds
+BIMBMYKL,Bank Islam,BI100002,7.0011E+11,Current,Biz Current Account-i,Syed Faizal Shah,NRIC,8.80202E+11,syed.faizal@gmail.com,60123456702,Islamic,TRUE,Greylisted,Sanctions Violation 
+BIMBMYKL,Bank Islam,BI100003,7.0011E+11,Savings,Youth Saver Account-i,Nadia Zulkifli,NRIC,9.70303E+11,nadia.zulkifli@gmail.com,60123456703,Islamic,TRUE,Blacklisted,Identity Theft
+BIMBMYKL,Bank Islam,BI100004,7.0011E+11,Current,Professional Current Account-i,Farhan Iskandar,NRIC,8.50404E+11,farhan.iskandar@gmail.com,60123456704,Islamic,TRUE,Greylisted,Unauthorized Trading
+BIMBMYKL,Bank Islam,BI100005,7.0011E+11,Savings,Gold Saver Account-i,Nurul Ain Mohamad,NRIC,9.20505E+11,nurul.ain@gmail.com,60123456705,Islamic,TRUE,Greylisted,Bribery
+RAKYMYKL,Bank Rakyat,BR100001,8.0011E+11,Savings,SIMPANAN-i Account,Siti Zubaidah,NRIC,9.10101E+11,siti.zubaidah@gmail.com,60124567801,Islamic,TRUE,Greylisted,None
+RAKYMYKL,Bank Rakyat,BR100002,8.0011E+11,Current,BIZ-i Account,Mohammad Fadhil,NRIC,8.70202E+11,mohammad.fadhil@gmail.com,60124567802,Islamic,TRUE,Blacklisted,Fraudulent Activity
+RAKYMYKL,Bank Rakyat,BR100003,8.0011E+11,Savings,Youth Savings Account-i,Aiman Hakim,NRIC,9.60303E+11,aiman.hakim@gmail.com,60124567803,Islamic,TRUE,Greylisted,Insufficient Funds
+RAKYMYKL,Bank Rakyat,BR100004,8.0011E+11,Current,SME Account-i,Noor Azlina,NRIC,8.80404E+11,noor.azlina@gmail.com,60124567804,Islamic,TRUE,Blacklisted,Terrorism Financing
+RAKYMYKL,Bank Rakyat,BR100005,8.0011E+11,Savings,Junior Savings-i Account,Farah Nazira,NRIC,9.70505E+11,farah.nazira@gmail.com,60124567805,Islamic,TRUE,Greylisted,None
