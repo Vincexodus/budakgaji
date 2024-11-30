@@ -192,7 +192,7 @@ export default function AppSidebar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push('/customer/transfer-amount');
+                      router.push('/customer/transfer-account');
                     }}
                   >
                     Customer
