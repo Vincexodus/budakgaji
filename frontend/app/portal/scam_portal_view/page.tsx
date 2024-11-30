@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/select';
 import PageContainer from '@/components/layout/page-container';
 
-const ScamReportPortal = () => {
+export default function Page() {
   const [formData, setFormData] = useState({
     // Scam Details
     scamDate: '2024-11-30',
@@ -367,5 +367,3 @@ const ScamReportPortal = () => {
     </PageContainer>
   );
 };
-
-export default ScamReportPortal;

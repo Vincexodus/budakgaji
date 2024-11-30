@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import { ArrowLeft, X, AlertCircle, BadgeDollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,26 +21,16 @@ export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
   const { setTheme } = useTheme();
   const router = useRouter();
-  const handleContinue = () => {
-    // Mock check for high-risk recipient
-    const isHighRisk = true; // Set to true for demo
-    if (isHighRisk) {
-      setShowWarning(true);
-    } else {
-      // Proceed with transfer
-      console.log('Transfer completed');
-    }
-  };
+  const [accountNumber , setAccountNumber] = useState("");
+  const [amount , setAmount] = useState("");
+
+  
 
   useEffect(() => {
     // Set the theme to light when the component mounts
     setTheme('light');
   }, [setTheme]);
-  const handleConfirmTransfer = () => {
-    setShowWarning(false);
-    // Proceed with the transfer
-    console.log('Transfer completed despite warning:');
-  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-black">
       <div className="flex min-h-[800px] w-full max-w-md flex-col rounded-lg bg-white shadow-lg">
@@ -48,6 +38,7 @@ export default function Page() {
         <header className="flex items-center justify-between border-b p-4">
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon">
+                
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <h1 className="text-xl font-semibold">Transfer Money</h1>
@@ -61,10 +52,29 @@ export default function Page() {
         <div className="flex-1 space-y-6 p-4">
           {/* Bank Logo and Title */}
           <div className="flex items-center space-x-3">
-            <h2 className="text-base font-semibold">
-              Fill in the amount you want to transfer:{' '}
+            <h2 className="text-black-800 text-2xl font-semibold">
+              Maybank
             </h2>
           </div>
+
+          <div className="space-y-1">
+            <div className="">
+              <p className="pb-2 text-gray-600">Account Bank Number</p>
+              <div className="w-full">
+                <div className="flex items-center">
+                  <Input
+                    type="text"
+                    value={accountNumber}
+                    className="w-full bg-transparent text-base font-semibold"
+                    onChange={(e) => setAccountNumber(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
+          {/* Bank Logo and Title */}
 
           <div className="space-y-1">
             <div className="">
@@ -74,68 +84,34 @@ export default function Page() {
                   <BadgeDollarSign className="mr-2 h-6 w-6 text-gray-600" />
                   <Input
                     type="text"
-                    value="RM 100.00"
+                    value={amount}
                     className="w-full bg-transparent text-base font-semibold"
+                    onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
               </div>
             </div>
           </div>
+        
         </div>
-
+        {/* Main Content */}
+        
+          
         {/* Bottom Button */}
         <div className="flex justify-center space-x-4 p-4">
           <Button
             className="w-2/3 bg-white py-6 text-base font-bold text-black hover:bg-white"
-            onClick={handleContinue}
           >
             Transfer Later
           </Button>
           <Button
             className="w-2/3 bg-red-500 py-6 text-base font-bold text-white hover:bg-red-600"
-            onClick={() => router.push('/customer/review-confirm')}
+            onClick={() =>  router.push(`/customer/review-confirm?amount=${amount}&accountNumber=${accountNumber}`)}
           >
             Transfer Now
           </Button>
         </div>
 
-        {/* High Risk Warning Dialog */}
-        <AlertDialog open={showWarning} onOpenChange={setShowWarning}>
-          <AlertDialogContent className="max-w-sm">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center text-red-600">
-                <AlertCircle className="mr-2 h-5 w-5" /> High-Risk Receipent
-                Detected
-              </AlertDialogTitle>
-              <AlertDialogDescription className="space-y-2">
-                <p>
-                  This recipient account has been flagged as potentially
-                  suspicious. Please verify:
-                </p>
-                <ul className="list-disc space-y-1 pl-4">
-                  <li>You know and trust the recipient</li>
-                  <li>You have verified the account details</li>
-                  <li>You understand this transfer cannot be reversed</li>
-                </ul>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="w-full sm:w-auto">
-                Cancel Transfer
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className="w-full bg-red-500 hover:bg-red-600 sm:w-auto"
-                onClick={() => {
-                  setShowWarning(false);
-                  console.log('Transfer completed despite warning');
-                  router.push('/customer/transfer-amount');
-                }}
-              >
-                Proceed Anyway
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
     </div>
   );
