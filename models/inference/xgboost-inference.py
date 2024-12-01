@@ -111,7 +111,7 @@ class FraudDetectionPipeline:
                     value = float(value)
                 feature_importance[feature] = value
             
-            # Generate explanation
+            # Update risk factors with context
             explanation = {
                 **result,
                 'fraud_class_explained': highest_fraud_class,
@@ -120,7 +120,11 @@ class FraudDetectionPipeline:
                     {
                         'feature': feature,
                         'impact': float(value),
-                        'interpretation': self._get_feature_interpretation(feature, float(value))
+                        'interpretation': self._get_feature_interpretation(
+                            feature, 
+                            float(value),
+                            transaction_data
+                        )
                     }
                     for feature, value in sorted(
                         feature_importance.items(),
@@ -139,21 +143,60 @@ class FraudDetectionPipeline:
                 print(f"Number of classes in SHAP values: {len(shap_values)}")
             raise
             
-    def _get_feature_interpretation(self, feature, shap_value):
-        """Generate human-readable interpretation of SHAP values"""
+    def _get_feature_interpretation(self, feature, shap_value, transaction_data):
+        """Generate context-aware interpretation of SHAP values"""
         impact = "increases" if shap_value > 0 else "decreases"
         magnitude = "significantly" if abs(shap_value) > 0.5 else "somewhat"
         
+        # Define thresholds and typical ranges
+        thresholds = {
+            'TransactionAmount': 1000.0,  # Threshold for large transactions
+            'in_degree': 10,    # Typical incoming transactions
+            'out_degree': 10,   # Typical outgoing transactions
+            'in_weight': 10000.0,  # Typical incoming amount
+            'out_weight': 10000.0,  # Typical outgoing amount
+            'AvailableBalance': 5000.0  # Typical balance threshold
+        }
+        
+        # Context-aware interpretations
+        value = transaction_data[feature]
+        threshold = thresholds[feature]
+        
         interpretations = {
-            'TransactionAmount': f"Transaction amount {impact} risk {magnitude}",
-            'in_degree': f"Number of incoming transactions {impact} risk {magnitude}",
-            'out_degree': f"Number of outgoing transactions {impact} risk {magnitude}",
-            'in_weight': f"Total incoming amount {impact} risk {magnitude}",
-            'out_weight': f"Total outgoing amount {impact} risk {magnitude}",
-            'AvailableBalance': f"Account balance {impact} risk {magnitude}"
+            'TransactionAmount': (
+                f"Transaction amount of ${value:,.2f} {impact} risk {magnitude}. "
+                f"{'This is above' if value > threshold else 'This is below'} "
+                f"the typical threshold of ${threshold:,.2f}"
+            ),
+            'in_degree': (
+                f"Number of incoming transactions ({value}) {impact} risk {magnitude}. "
+                f"{'This is higher than' if value > threshold else 'This is lower than'} "
+                f"the typical frequency of {threshold} transactions"
+            ),
+            'out_degree': (
+                f"Number of outgoing transactions ({value}) {impact} risk {magnitude}. "
+                f"{'This is higher than' if value > threshold else 'This is lower than'} "
+                f"the typical frequency of {threshold} transactions"
+            ),
+            'in_weight': (
+                f"Total incoming amount of ${value:,.2f} {impact} risk {magnitude}. "
+                f"{'This exceeds' if value > threshold else 'This is within'} "
+                f"typical incoming volume of ${threshold:,.2f}"
+            ),
+            'out_weight': (
+                f"Total outgoing amount of ${value:,.2f} {impact} risk {magnitude}. "
+                f"{'This exceeds' if value > threshold else 'This is within'} "
+                f"typical outgoing volume of ${threshold:,.2f}"
+            ),
+            'AvailableBalance': (
+                f"Account balance of ${value:,.2f} {impact} risk {magnitude}. "
+                f"{'This is above' if value > threshold else 'This is below'} "
+                f"the typical balance threshold of ${threshold:,.2f}"
+            )
         }
         
         return interpretations.get(feature, f"Feature {impact} risk {magnitude}")
+
 
 # Example usage:
 def load_fraud_detection_pipeline(model_dir='models'):
@@ -192,9 +235,9 @@ def main():
     if 'fraud_class_explained' in explanation:
         print(f"\nDetailed explanation for {explanation['fraud_class_explained']}:")
         print(f"Fraud probability: {explanation['fraud_probability']:.3f}")
-        print("\nTop risk factors:")
+        print("\nRisk Analysis:")
         for factor in explanation['risk_factors']:
-            print(f"- {factor['interpretation']} (impact: {factor['impact']:.4f})")
+            print(f"• {factor['interpretation']}")
 
 if __name__ == "__main__":
     main()
