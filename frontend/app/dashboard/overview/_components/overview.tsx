@@ -1,6 +1,5 @@
 'use client';
 
-'use client';
 import { AreaGraph } from './area-graph';
 import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
@@ -60,8 +59,6 @@ export default function OverViewPage() {
     { id: number; name: string; riskLevel: string }[]
   >([]);
   const [showAlertDialog, setShowAlertDialog] = useState(false);
-  const [countries, setCountries] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
   interface LinkedAccount {
     id: number;
@@ -84,22 +81,6 @@ export default function OverViewPage() {
     setShowAlertDialog(true);
   };
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      const { data, error } = await supabase.from('countries').select('*');
-      if (error) {
-        console.error('Error fetching countries:', error);
-      } else {
-        setCountries(data);
-      }
-      setLoading(false);
-    };
-
-    fetchCountries();
-  }, []);
-  
-  
-  
   const suspiciousUsers = [
     {
       id: 1,
@@ -136,18 +117,6 @@ export default function OverViewPage() {
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Supabase Test (should show country names under if works)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {!loading && countries.map((item) => (
-                    <li key={item.id}>{item.name}</li>
-                  ))}
-                </CardContent>
-              </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">

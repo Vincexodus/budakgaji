@@ -22,26 +22,15 @@ import {
   AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const isTransactionClean = searchParams.get('isTransactionClean') === 'true';
+
   const [showWarning, setShowWarning] = useState(false);
   const router = useRouter();
 
-  const handleContinue = () => {
-    // Mock check for high-risk recipient
-    const isHighRisk = true; // Set to true for demo
-    if (isHighRisk) {
-      setShowWarning(true);
-    } else {
-      // Proceed with transfer
-      console.log('Transfer completed');
-    }
-  };
-  const handleConfirmTransfer = () => {
-    setShowWarning(false);
-    // Proceed with the transfer
-    console.log('Transfer completed despite warning:');
-  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-black">
       <div className="flex min-h-[800px] w-full max-w-md flex-col rounded-lg bg-white shadow-lg">
@@ -78,7 +67,9 @@ export default function Page() {
                 <div className="flex items-center justify-end space-x-2">
                   <div className="text-right">
                     <div className="flex justify-end">
-                      <AlertTriangle className="h-5 w-5 text-red-500" />
+                      {!isTransactionClean && (
+                        <AlertTriangle className="h-5 w-5 text-yellow-500" />
+                      )}{' '}
                       <p className="pl-2 font-semibold">JOHN DOE</p>
                     </div>
                     <p className="text-gray-600">
@@ -137,7 +128,7 @@ export default function Page() {
         <div className="flex justify-center space-x-4 p-4">
           <Button
             className="w-2/3 bg-red-500 py-6 text-white hover:bg-red-600"
-            onClick={() => router.push('/customer/transfer-amount')}
+            onClick={() => router.push('/customer/transfer-account')}
           >
             <Download className="mr-2 h-5 w-5" />
             Download Receipt

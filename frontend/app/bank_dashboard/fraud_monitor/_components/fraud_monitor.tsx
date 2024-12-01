@@ -33,42 +33,45 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { PaperclipIcon as PaperClipIcon, UserCircleIcon } from 'lucide-react';
+import { PaperclipIcon as PaperClipIcon, Router, UserCircleIcon } from 'lucide-react';
 import PageContainer from '@/components/layout/page-container';
-
-// Mock data
+import { useRouter } from 'next/navigation';
 const cases = [
   {
-    id: 'CASE001',
-    title: 'Suspicious wire transfer',
-    assignedTo: 'Alice Johnson',
-    status: 'Open',
-    priority: 'High',
-    dueDate: '2023-12-01'
+    AccountId: '000318DE-1C1',
+    AccountNumber: '38379801089',
+    AccountHolderFullName: 'Vijay Patel',
+    AccountType: 'E-Wallet (Individual)',
+    Priority: 'High', // Placeholder value
+    FraudType: 'Phishing', // Placeholder value
+    FraudAmount: '1000', // Placeholder value
   },
   {
-    id: 'CASE002',
-    title: 'Multiple failed login attempts',
-    assignedTo: 'Bob Smith',
-    status: 'In Progress',
-    priority: 'Medium',
-    dueDate: '2023-11-30'
+    AccountId: '0006838A-6A8',
+    AccountNumber: '20721297463',
+    AccountHolderFullName: 'Ah Hock Tan',
+    AccountType: 'E-Wallet (Individual)',
+    Priority: 'Medium', // Placeholder value
+    FraudType: 'Identity Theft', // Placeholder value
+    FraudAmount: '2000', // Placeholder value
   },
   {
-    id: 'CASE003',
-    title: 'Unusual account activity',
-    assignedTo: 'Charlie Brown',
-    status: 'Under Review',
-    priority: 'Low',
-    dueDate: '2023-12-05'
+    AccountId: '000D44F3-97D',
+    AccountNumber: '20901814561',
+    AccountHolderFullName: 'Anand Nair',
+    AccountType: 'Savings',
+    Priority: 'Low', // Placeholder value
+    FraudType: 'Account Takeover', // Placeholder value
+    FraudAmount: '3000', // Placeholder value
   },
   {
-    id: 'CASE004',
-    title: 'Potential identity theft',
-    assignedTo: 'Diana Prince',
-    status: 'Escalated',
-    priority: 'High',
-    dueDate: '2023-11-28'
+    AccountId: '000F4AFB-0BF',
+    AccountNumber: '15643987694',
+    AccountHolderFullName: 'Ah Hock Ng',
+    AccountType: 'E-Wallet (Individual)',
+    Priority: 'High', // Placeholder value
+    FraudType: 'Phishing', // Placeholder value
+    FraudAmount: '4000', // Placeholder value
   }
 ];
 
@@ -137,82 +140,69 @@ const caseDetails = {
   ]
 };
 
-export default function CaseManagement() {
+export default function FraudMonitor() {
   const [selectedCase, setSelectedCase] = useState(caseDetails);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const router = useRouter();
+  
   const handleCaseClick = (caseId: string) => {
-    // In a real application, this would fetch the case details from an API
-    setSelectedCase(caseDetails);
-    setIsDialogOpen(true);
+    router.push('/bank_dashboard/risk_analysis');
   };
 
   return (
     <PageContainer scrollable>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Case Management</h1>
-          <Button>Create New Case</Button>
+          <h1 className="text-3xl font-bold">Fraud Monitor</h1>
+          <Button>File Report Manually</Button>
         </div>
 
         {/* Case List */}
         <Card>
           <CardHeader>
-            <CardTitle>Active Cases</CardTitle>
+            <CardTitle>Fraud Accounts (4)</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Case ID</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Assigned To</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Account Id</TableHead>
+                  <TableHead>Account Number</TableHead>
+                  <TableHead>Account Name</TableHead>
+                  <TableHead>Account Type</TableHead>
                   <TableHead>Priority</TableHead>
-                  <TableHead>Due Date</TableHead>
+                  <TableHead>Fraud Type</TableHead>
+                  <TableHead>Fraud Amount (MYR)</TableHead>
                   <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {cases.map((case_) => (
-                  <TableRow key={case_.id}>
-                    <TableCell>{case_.id}</TableCell>
-                    <TableCell>{case_.title}</TableCell>
-                    <TableCell>{case_.assignedTo}</TableCell>
+                  <TableRow key={case_.AccountId}>
+                    <TableCell>{case_.AccountId}</TableCell>
+                    <TableCell>{case_.AccountNumber}</TableCell>
+                    <TableCell>{case_.AccountHolderFullName}</TableCell>
+                    <TableCell>{case_.AccountType}</TableCell>
                     <TableCell>
                       <Badge
-                        variant={
-                          case_.status === 'Open'
-                            ? 'secondary'
-                            : case_.status === 'In Progress'
-                            ? 'default'
-                            : case_.status === 'Under Review'
-                            ? 'outline'
-                            : 'destructive'
+                        className={
+                          case_.Priority === 'High'
+                            ? 'bg-red-500 text-black'
+                            : case_.Priority === 'Medium'
+                            ? 'bg-yellow-500 text-black'
+                            : 'bg-green-500 text-black'
                         }
                       >
-                        {case_.status}
+                        {case_.Priority}
                       </Badge>
                     </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          case_.priority === 'High'
-                            ? 'destructive'
-                            : case_.priority === 'Medium'
-                            ? 'outline'
-                            : 'secondary'
-                        }
-                      >
-                        {case_.priority}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{case_.dueDate}</TableCell>
+                    <TableCell>{case_.FraudType}</TableCell>
+                    <TableCell>{case_.FraudAmount}</TableCell>
                     <TableCell>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleCaseClick(case_.id)}
+                        onClick={() => handleCaseClick(case_.AccountId)}
                       >
                         View
                       </Button>

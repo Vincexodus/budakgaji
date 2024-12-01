@@ -192,10 +192,17 @@ export default function AppSidebar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push('/customer/transfer-amount');
+                      router.push('/customer/transfer-account');
                     }}
                   >
                     Customer
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push('/portal/scam_portal');
+                    }}
+                  >
+                    Scam Report Portal
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
