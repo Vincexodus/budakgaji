@@ -23,12 +23,43 @@ export default function Page() {
   const router = useRouter();
   const [accountNumber , setAccountNumber] = useState("");
   const [amount , setAmount] = useState("");
+  const [prediction , setPrediction] = useState("");
 
   
   useEffect(() => {
     // Set the theme to light when the component mounts
     setTheme('light');
   }, [setTheme]);
+
+  const handleTransferNow = async () => {
+    const transactionData = {
+      TransactionAmount: 250,
+      in_degree: 15, // Replace with actual value
+      out_degree: 12, // Replace with actual value
+      in_weight: 15000.0, // Replace with actual value
+      out_weight: 12000.0, // Replace with actual value
+      AvailableBalance: 1200.0 // Replace with actual value
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      const result = await response.json();
+      console.log('Prediction result:', result);
+
+      const encodedResult = encodeURIComponent(JSON.stringify(result));
+      // Navigate to the review-confirm page with the amount and accountNumber
+      router.push(`/customer/review-confirm?amount=${amount}&accountNumber=${accountNumber}&result=${encodedResult}`);
+    } catch (error) {
+      console.error('Error making prediction request:', error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-black">
@@ -103,9 +134,9 @@ export default function Page() {
           </Button>
           <Button
             className="w-2/3 bg-red-500 py-6 text-base font-bold text-white hover:bg-red-600"
-            onClick={() =>  router.push(`/customer/review-confirm?amount=${amount}&accountNumber=${accountNumber}`)}
+            onClick={handleTransferNow}
           >
-            Transfer Now
+            
           </Button>
         </div>
 

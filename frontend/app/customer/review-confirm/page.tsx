@@ -77,6 +77,8 @@ export default function Page() {
   const [output, setOutput] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const resultParam = searchParams.get('result');
+  const result = resultParam ? JSON.parse(decodeURIComponent(resultParam)) : null;
   const amount = searchParams.get('amount');
   const accountNumber = searchParams.get('accountNumber');
   const [fraudWarning, setFraudWarning] = useState(false);
@@ -255,8 +257,8 @@ export default function Page() {
             <hr className="border-t border-gray-300" />
           </div>
 
-          {/* Terms and Important Note */}
-          <div className="space-y-4">
+          Terms and Important Note
+          {/* <div className="space-y-4">
             <p className="text-sm">
               By proceeding I acknowledge that I have read and agreed to the{' '}
               <span className="text-blue-600">Terms and Conditions</span>.
@@ -270,9 +272,16 @@ export default function Page() {
                 non-deposit account.
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
+        
+        <hr />
+        *Backend*
+        <div className="p-4">
+        <p className="text-gray-600">Prediction: {result.prediction}</p>
+          <p className="text-gray-600">Confidence: {result.confidence.toFixed(4)}</p>
 
+        </div>
         {/* Bottom Button */}
         <div className="flex justify-center p-4">
           <Button
