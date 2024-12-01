@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, X, AlertCircle, BadgeDollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,11 +21,10 @@ export default function Page() {
   const [showWarning, setShowWarning] = useState(false);
   const { setTheme } = useTheme();
   const router = useRouter();
-  const [accountNumber , setAccountNumber] = useState("");
-  const [amount , setAmount] = useState("");
-  const [prediction , setPrediction] = useState("");
+  const [accountNumber, setAccountNumber] = useState("712345678901");
+  const [amount, setAmount] = useState("250");
+  const [prediction, setPrediction] = useState("");
 
-  
   useEffect(() => {
     // Set the theme to light when the component mounts
     setTheme('light');
@@ -68,7 +67,6 @@ export default function Page() {
         <header className="flex items-center justify-between border-b p-4">
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon">
-                
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <h1 className="text-xl font-semibold">Transfer Money</h1>
@@ -103,7 +101,6 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Bank Logo and Title */}
           <div className="space-y-1">
             <div className="">
               <p className="pb-2 text-gray-600">Amount</p>
@@ -120,11 +117,8 @@ export default function Page() {
               </div>
             </div>
           </div>
-        
         </div>
-        {/* Main Content */}
-        
-          
+
         {/* Bottom Button */}
         <div className="flex justify-center space-x-4 p-4">
           <Button
@@ -136,10 +130,9 @@ export default function Page() {
             className="w-2/3 bg-red-500 py-6 text-base font-bold text-white hover:bg-red-600"
             onClick={handleTransferNow}
           >
-            
+            Transfer Now
           </Button>
         </div>
-
       </div>
     </div>
   );

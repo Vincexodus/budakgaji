@@ -28,37 +28,6 @@ const openai = new OpenAI({
 });
 import { supabase } from '@/lib/supabaseClient';
 
-const fraudulentReasons = [
-  'Unauthorized Use of Payment Method',
-  'Fake or Suspicious Merchant Website',
-  'Fake Buyer or Seller',
-  'Suspiciously High Transaction Volume'
-];
-
-const fetchCompletion = async (): Promise<string[]> => {
-  const prompt = `Generate one question for each reason related to suspicious transactions in JSON format. 
-  Use this structure:
-  {
-    "fake_buyer_or_seller": "Question here",
-    "fake_or_suspicious_merchant_website": "Question here",
-    "suspiciously_high_transaction_volume": "Question here",
-    "unauthorized_use_of_payment_method": "Question here"
-  }`;
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo-1106',
-      messages: [{ role: 'user', content: prompt }],
-    });
-
-    const content = completion.choices[0].message.content;
-    const parsedContent = JSON.parse(content!); // Parse JSON from response
-    return Object.values(parsedContent); // Extract question texts as an array
-  } catch (error) {
-    console.error('Error fetching questions:', error);
-    return []; // Return an empty array on error
-  }
-};
 
 interface AccountData {
   Account_ID: string;
@@ -73,7 +42,7 @@ export default function Page() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<string[]>([]);
-  const [isTransactionClean, setIsTransactionClean] = useState(true); // Add this state
+  const [isTransactionClean, setIsTransactionClean] = useState(false); // Add this state
   const [output, setOutput] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -84,8 +53,40 @@ export default function Page() {
   const [fraudWarning, setFraudWarning] = useState(false);
   const [accountName , setAccountName] = useState("");
   const [providerName , setProviderName] = useState("");
+  const [fraudulentReasons, setFraudulentReasons] = useState<string[]>([]);
 
 
+  const fetchCompletion = async (): Promise<string[]> => {
+    // Construct the prompt using the fraudulentReasons array
+    const reasonsPrompt = fraudulentReasons.map((reason, index) => `"${reason}": "question"`).join(', ');
+    const prompt = `Generate one question for each reason related to suspicious transactions in JSON format. 
+    Use this structure:
+    {
+      ${reasonsPrompt}
+    }`;
+  
+    console.log(reasonsPrompt);
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo-1106',
+        messages: [{ role: 'user', content: prompt }],
+      });
+  
+      const content = completion.choices[0].message.content;
+      const parsedContent = JSON.parse(content!); // Parse JSON from response
+      console.log('Parsed content:', parsedContent);
+      return Object.values(parsedContent); // Extract question texts as an array
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      return []; // Return an empty array on error
+    }
+  };
+  // useEffect(() => {
+  //   if (result && result.risk_factors) {
+  //     const reasons = result.risk_factors.map((factor: any) => factor.interpretation);
+  //     setFraudulentReasons(reasons);
+  //   }
+  // }, [result]);
   const handleContinue = () => {
     // Mock check for high-risk recipient
     if (isTransactionClean) {
@@ -121,7 +122,11 @@ export default function Page() {
     }
   };
    // Effect to check account status on component mount
-   useEffect(() => {
+  useEffect(() => {
+    if (result && result.risk_factors) {
+      const reasons = result.risk_factors.map((factor: any) => factor.interpretation);
+      setFraudulentReasons(reasons);
+    }
     const verifyAccount = async () => {
       const accountData = await checkAccountStatus(accountNumber!);
   
@@ -132,6 +137,7 @@ export default function Page() {
         if (accountData.Status === 'Blacklisted') {
           setFraudWarning(true);
         } else if (accountData.Status === 'Greylisted') {
+          console.log("gray");
           setIsTransactionClean(false);
           const questions = await fetchCompletion();
           setQuestions(questions);

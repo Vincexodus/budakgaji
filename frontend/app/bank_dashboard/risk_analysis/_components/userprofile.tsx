@@ -176,7 +176,7 @@ export function UserProfile({
             {/* Safe check for undefined banks */}
             {(user.linkedBanks ?? []).map((bank, index) => (
               <div key={index} className="flex items-center justify-between">
-                <span className="text-sm font-medium text-white">
+                <span className="text-sm font-medium text-black">
                   {bank}
                 </span>
                 <Button
